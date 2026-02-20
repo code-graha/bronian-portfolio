@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bronian | Freelance Graphic Designer</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Bronian — Freelance Graphic Designer specializing in branding, print, illustration, and video editing. Available for hire. Based in India, working globally.">
+    <meta name="keywords" content="Bronian, Mohit, graphic designer, freelance, branding, logo design, video editing, print design, illustration, typography, packaging, motion graphics, India">
+    <meta name="author" content="Bronian">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://bronian.work.gd/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bronian.work.gd/">
+    <meta property="og:title" content="Bronian | Freelance Graphic Designer">
+    <meta property="og:description" content="Freelance Graphic Designer specializing in branding, print, illustration, and video editing. Bold visuals that cut through the noise.">
+    <meta property="og:site_name" content="Bronian — Portfolio">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://bronian.work.gd/">
+    <meta name="twitter:title" content="Bronian | Freelance Graphic Designer">
+    <meta name="twitter:description" content="Freelance Graphic Designer specializing in branding, print, illustration, and video editing. Bold visuals that cut through the noise.">
+
+    <meta name="theme-color" content="#0a0a0a">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Mohit",
+        "alternateName": "Bronian",
+        "url": "https://bronian.work.gd",
+        "email": "mahoitdhondial@gmail.com",
+        "telephone": "+919599331490",
+        "jobTitle": "Freelance Graphic Designer",
+        "description": "Freelance Graphic Designer specializing in branding, print, illustration, and video editing. Based in India, working globally.",
+        "knowsAbout": ["Graphic Design", "Branding", "Logo Design", "Video Editing", "Print Design", "Illustration", "Typography", "Packaging", "Motion Graphics"],
+        "address": { "@type": "PostalAddress", "addressCountry": "IN" }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Bronian — Freelance Graphic Designer Portfolio",
+        "url": "https://bronian.work.gd"
+      }
+    ]
+    </script>
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://script.google.com" crossorigin>
+    <link rel="dns-prefetch" href="https://script.google.com">
+
+    <!-- Early Sheets fetch — starts before script.js loads -->
+    <script>
+        (function () {
+            var url = 'https://script.google.com/macros/s/AKfycbxHMumKiA4G5r2kM4S6NHiyYUwj2ys_L5kQHUgUv4Zqi6N317_ZOCeqo9pjnVlbHyZpEg/exec';
+            var cb = '&_t=' + Date.now();
+            window.__earlyProjects = fetch(url + '?type=projects' + cb).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+            window.__earlyReviews = fetch(url + '?type=reviews' + cb).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+        })();
+    </script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,500,600,700&f[]=space-grotesk@300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="script.js" defer></script>
+    <script src="guard.js" defer></script>
+</head>
+<body class="relative">
+
+    <!-- ========== LOADING SCREEN ========== -->
+    <div id="loadingScreen" class="fixed inset-0 z-[9999] bg-brand-black flex items-center justify-center">
+        <div class="loading-content flex flex-col items-center">
+            <!-- Logo icon — same style as navbar/footer -->
+            <div class="loading-logo w-16 h-16 bg-brand-orange -rotate-12 flex items-center justify-center border border-white mb-4">
+                <span class="text-black font-bold text-3xl">B</span>
+            </div>
+            <!-- Brand name — same typography as navbar/footer -->
+            <div class="overflow-hidden">
+                <span class="loading-brand font-display font-bold text-3xl tracking-tighter uppercase text-white">Bronian<span class="text-brand-orange">.</span></span>
+            </div>
+            <!-- Loading bar -->
+            <div class="mt-6 w-48 h-[2px] bg-brand-gray/30 overflow-hidden">
+                <div class="loading-bar h-full bg-brand-orange"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Noise Overlay -->
+    <div class="fixed inset-0 w-full h-full z-0 bg-noise opacity-30"></div>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 bg-brand-black/90 backdrop-blur-md border-b border-brand-gray transition-all duration-300">
+        <div class="max-w-[1440px] mx-auto px-6 h-20 flex justify-between items-center">
+            <!-- Logo -->
+            <a href="#hero" class="flex items-center gap-4 group cursor-pointer">
+                <div class="w-10 h-10 bg-brand-orange transform -rotate-12 group-hover:rotate-0 transition-transform duration-300 flex items-center justify-center border border-white">
+                    <span class="nav-logo-letter text-black font-bold text-xl"></span>
+                </div>
+                <span class="nav-brand-name font-display font-bold text-2xl tracking-tighter uppercase text-white"></span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center gap-1">
+                <a href="#work" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Work</a>
+                <a href="#services" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Services</a>
+                <a href="#about" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">About</a>
+                <a href="#testimonials" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Reviews</a>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-6">
+                <a href="#contact" class="hidden md:block border border-white px-6 py-2 text-sm uppercase font-bold hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300 clip-tag">
+                    Hire Me
+                </a>
+                <button id="menuBtn" class="md:hidden text-white text-2xl w-12 h-12 flex items-center justify-center border border-brand-gray hover:border-brand-orange transition-colors" aria-label="Menu">
+                    <i class="fa-solid fa-bars-staggered"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== MOBILE MENU ========== -->
+    <div id="mobileMenu" class="mobile-menu fixed top-0 right-0 w-72 h-full z-[60] bg-brand-black border-l border-brand-gray flex flex-col">
+        <div class="flex justify-between items-center p-6 border-b border-brand-gray">
+            <span class="font-display font-bold text-xl uppercase">Menu</span>
+            <button id="menuClose" class="w-10 h-10 border border-brand-gray flex items-center justify-center hover:border-brand-orange hover:text-brand-orange transition-colors">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="flex flex-col p-6 gap-2">
+            <a href="#work" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">Work</a>
+            <a href="#services" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">Services</a>
+            <a href="#about" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">About</a>
+            <a href="#testimonials" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">Reviews</a>
+            <a href="#contact" class="mobile-link mt-6 py-3 bg-brand-orange text-black text-center uppercase font-bold tracking-widest hover:bg-white transition-colors">Hire Me</a>
+        </div>
+    </div>
+    <div id="menuBackdrop" class="fixed inset-0 bg-black/60 z-[55] hidden"></div>
+
+    <main>
+
+    <!-- ========== HERO ========== -->
+    <section id="hero" class="relative w-full h-screen min-h-[800px] flex items-center justify-center overflow-hidden pt-20 border-b border-brand-gray">
+        <!-- Background Grid -->
+        <div class="absolute inset-0 z-0 opacity-20" style="background-image: linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <!-- Spinning Circles -->
+        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-1/4 w-[800px] h-[800px] border-[1px] border-brand-gray rounded-full opacity-30 animate-spin-slow"></div>
+        <div class="absolute left-0 bottom-0 transform -translate-x-1/4 translate-y-1/4 w-[600px] h-[600px] border-[1px] border-brand-orange opacity-20 rounded-full animate-spin-slow" style="animation-direction: reverse;"></div>
+
+        <div class="relative z-10 container mx-auto px-6 flex flex-col items-center justify-center text-center">
+            <!-- Badge -->
+            <div class="hero-badge mb-8 inline-flex items-center gap-2 border border-brand-orange px-4 py-1 bg-brand-orange/10">
+                <span class="w-2 h-2 bg-brand-orange animate-pulse"></span>
+                <span class="hero-badge-text text-brand-orange text-xs font-mono uppercase tracking-widest">Available for Freelance Work</span>
+            </div>
+            <!-- Headline -->
+            <h1 class="hero-headline font-display font-bold text-6xl md:text-8xl lg:text-9xl leading-[0.9] tracking-tighter mb-8 text-white mix-blend-difference">
+                GRAPHIC <span class="text-outline">DESIGNER</span><br>
+                <span class="text-brand-orange">&amp; VISUAL</span> THINKER
+            </h1>
+            <!-- Subtitle -->
+            <p class="hero-subtitle font-body text-brand-light-gray text-lg md:text-xl max-w-2xl mb-12 leading-relaxed"></p>
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row gap-6 w-full justify-center">
+                <a href="#work" class="relative group inline-block bg-brand-orange text-black font-bold text-lg px-10 py-4 uppercase tracking-wider clip-angle hover:bg-white transition-colors duration-300">
+                    View My Work
+                    <i class="fa-solid fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="#contact" class="inline-block border border-brand-gray text-white font-bold text-lg px-10 py-4 uppercase tracking-wider hover:border-brand-orange hover:text-brand-orange transition-colors duration-300">
+                    Get In Touch
+                </a>
+            </div>
+        </div>
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+            <span class="text-[10px] uppercase tracking-[0.3em] rotate-90 origin-center mb-8">Scroll</span>
+            <div class="w-[1px] h-16 bg-gradient-to-b from-brand-orange to-transparent"></div>
+        </div>
+    </section>
+
+    <!-- ========== MARQUEE ========== -->
+    <section id="marquee" class="border-b border-brand-gray bg-brand-orange text-black overflow-hidden py-4">
+        <div class="marquee-content flex animate-marquee whitespace-nowrap">
+            <!-- Populated by script.js -->
+        </div>
+    </section>
+
+    <!-- ========== WORK SECTION (filter + grid) ========== -->
+    <div id="work">
+        <!-- FILTER BAR — sticky only within this wrapper -->
+        <section id="filters" class="sticky top-20 z-40 bg-brand-black border-b border-brand-gray py-6">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="filter-buttons flex items-center gap-4 overflow-x-auto no-scrollbar pb-2 md:pb-0">
+                        <!-- Populated by script.js -->
+                    </div>
+                    <div class="flex items-center gap-4 ml-auto">
+                        <span class="project-count text-xs uppercase text-brand-light-gray hidden md:block tracking-widest"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PORTFOLIO GRID -->
+        <section class="py-20 bg-brand-black">
+            <div class="container mx-auto px-6">
+                <!-- Section Loader -->
+                <div class="section-loader" id="workLoader">
+                    <div class="flex flex-col items-center justify-center py-20">
+                        <div class="w-10 h-10 border-2 border-brand-gray border-t-brand-orange rounded-full animate-spin mb-4"></div>
+                        <span class="text-brand-light-gray text-xs uppercase tracking-widest">Loading Projects...</span>
+                    </div>
+                </div>
+                <div class="masonry-grid">
+                    <!-- Populated by script.js -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ========== ABOUT ========== -->
+    <section id="about" class="py-24 border-t border-brand-gray relative overflow-hidden">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Text -->
+                <div class="lg:col-span-5 order-2 lg:order-1">
+                    <div class="mb-4">
+                        <span class="about-tagline text-brand-orange font-mono text-sm uppercase tracking-widest">/// About Me</span>
+                    </div>
+                    <h2 class="about-headline text-5xl md:text-7xl font-bold font-display mb-8 leading-none uppercase">
+                        I Design <br><span class="text-brand-orange">Bold</span> Things.
+                    </h2>
+                    <p class="about-description text-brand-light-gray text-lg mb-8 leading-relaxed font-light"></p>
+
+                    <div class="about-highlights space-y-6 mb-10">
+                        <!-- Populated by script.js -->
+                    </div>
+
+                    <a href="#contact" class="inline-block bg-brand-orange text-black font-bold px-8 py-4 uppercase tracking-wider clip-angle hover:bg-white transition-colors duration-300">
+                        Let's Talk <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                <!-- Image -->
+                <div class="lg:col-span-7 order-1 lg:order-2 relative">
+                    <div class="relative z-10 border-4 border-brand-black w-full">
+                        <img class="about-image w-full h-auto grayscale contrast-125 brightness-90" src="" alt="Mohit — Graphic Designer">
+                        <div class="absolute inset-0 border-[1px] border-brand-orange m-4 pointer-events-none"></div>
+                    </div>
+                    <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-brand-orange z-0 hidden md:block"></div>
+                    <div class="absolute -top-8 -right-8 w-64 h-64 border border-brand-light-gray z-0 hidden md:block" style="background-image: repeating-linear-gradient(45deg, #222 0, #222 1px, transparent 0, transparent 50%); background-size: 10px 10px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== STATS ========== -->
+    <section id="stats" class="border-y border-brand-gray bg-brand-dark py-16">
+        <div class="container mx-auto px-6">
+            <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <!-- Populated by script.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SERVICES ========== -->
+    <section id="services" class="py-24 bg-brand-black border-t border-brand-gray">
+        <div class="container mx-auto px-6">
+            <div class="mb-16">
+                <span class="text-brand-orange font-mono text-sm uppercase tracking-widest">/// What I Do</span>
+                <h2 class="text-4xl md:text-6xl font-bold uppercase mt-4">My <span class="text-brand-orange">Services</span></h2>
+            </div>
+            <div class="services-grid grid grid-cols-1 md:grid-cols-2 gap-0 border border-brand-gray">
+                <!-- Populated by script.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== PROCESS ========== -->
+    <section id="process" class="py-24 border-t border-brand-gray bg-brand-dark">
+        <div class="container mx-auto px-6">
+            <div class="mb-16">
+                <span class="text-brand-orange font-mono text-sm uppercase tracking-widest">/// How I Work</span>
+                <h2 class="text-4xl md:text-6xl font-bold uppercase mt-4">My <span class="text-brand-orange">Process</span></h2>
+            </div>
+            <div class="process-grid grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Populated by script.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIALS ========== -->
+    <section id="testimonials" class="py-24 bg-brand-black border-t border-brand-gray">
+        <div class="container mx-auto px-6">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <span class="text-brand-orange font-mono text-sm uppercase tracking-widest">/// Testimonials</span>
+                    <h2 class="text-4xl md:text-6xl font-bold uppercase mt-4">Client <span class="text-brand-orange">Words</span></h2>
+                </div>
+            </div>
+            <!-- Section Loader -->
+            <div class="section-loader" id="testimonialsLoader">
+                <div class="flex flex-col items-center justify-center py-20">
+                    <div class="w-10 h-10 border-2 border-brand-gray border-t-brand-orange rounded-full animate-spin mb-4"></div>
+                    <span class="text-brand-light-gray text-xs uppercase tracking-widest">Loading Reviews...</span>
+                </div>
+            </div>
+            <div class="testimonials-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Populated by script.js -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTACT ========== -->
+    <section id="contact" class="py-24 bg-brand-orange text-black">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <!-- Left: Text -->
+                <div>
+                    <h2 class="contact-headline text-5xl md:text-8xl font-bold font-display uppercase mb-8 tracking-tighter">Let's <br>Work <span class="text-white">Together</span></h2>
+                    <p class="contact-description text-xl font-bold mb-8 max-w-lg"></p>
+                    <div class="flex flex-col gap-4 text-lg font-bold">
+                        <a href="" class="contact-email flex items-center gap-3 hover:text-white transition-colors">
+                            <i class="fa-solid fa-envelope"></i> <span></span>
+                        </a>
+                        <a href="" class="contact-phone flex items-center gap-3 hover:text-white transition-colors">
+                            <i class="fa-solid fa-phone"></i> <span></span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Right: Form -->
+                <div>
+                    <form id="contactForm" class="space-y-4">
+                        <div>
+                            <input type="text" name="name" placeholder="YOUR NAME" required class="w-full bg-black text-white px-6 py-4 uppercase font-bold placeholder-brand-light-gray focus:outline-none focus:ring-4 focus:ring-white border-none text-sm">
+                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Name is required</p>
+                        </div>
+                        <div>
+                            <input type="email" name="email" placeholder="YOUR EMAIL" required class="w-full bg-black text-white px-6 py-4 uppercase font-bold placeholder-brand-light-gray focus:outline-none focus:ring-4 focus:ring-white border-none text-sm">
+                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Valid email is required</p>
+                        </div>
+                        <div>
+                            <select name="service" required class="contact-service-select w-full bg-black text-brand-light-gray px-6 py-4 uppercase font-bold focus:outline-none focus:ring-4 focus:ring-white border-none text-sm appearance-none cursor-pointer">
+                                <!-- Populated by script.js -->
+                            </select>
+                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Please select a service</p>
+                        </div>
+                        <div>
+                            <textarea name="message" placeholder="TELL ME ABOUT YOUR PROJECT" rows="4" class="w-full bg-black text-white px-6 py-4 uppercase font-bold placeholder-brand-light-gray focus:outline-none focus:ring-4 focus:ring-white border-none text-sm resize-none"></textarea>
+                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Message is required</p>
+                        </div>
+                        <button type="submit" class="w-full bg-black text-white py-5 font-bold uppercase tracking-widest text-lg hover:bg-white hover:text-black transition-colors">
+                            <span class="btn-text">Send Message <i class="fa-solid fa-paper-plane ml-2"></i></span>
+                            <span class="btn-loading hidden"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Sending...</span>
+                        </button>
+                    </form>
+                    <div id="formSuccess" class="hidden mt-4 p-4 bg-green-600/20 border border-green-600 text-green-400 text-center font-bold uppercase text-sm">
+                        <i class="fa-solid fa-check-circle mr-2"></i>Message sent successfully! I'll get back to you soon.
+                    </div>
+                    <div id="formError" class="hidden mt-4 p-4 bg-red-600/20 border border-red-600 text-red-400 text-center font-bold uppercase text-sm">
+                        <i class="fa-solid fa-exclamation-circle mr-2"></i>Failed to send message. Please try again or email directly.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer id="footer" class="bg-brand-black border-t border-brand-gray pt-16 pb-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-16 gap-12">
+                <!-- Brand -->
+                <div class="max-w-xs">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-8 h-8 bg-brand-orange flex items-center justify-center border border-white">
+                            <span class="footer-logo-letter text-black font-bold text-lg"></span>
+                        </div>
+                        <span class="footer-brand-name font-display font-bold text-xl tracking-tighter uppercase text-white"></span>
+                    </div>
+                    <p class="footer-tagline text-brand-light-gray text-sm"></p>
+                </div>
+                <!-- Links -->
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-12">
+                    <div>
+                        <h4 class="text-white font-bold uppercase mb-6 text-sm tracking-widest">Navigate</h4>
+                        <ul class="footer-nav-links space-y-3 text-sm text-brand-light-gray">
+                            <!-- Populated by script.js -->
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold uppercase mb-6 text-sm tracking-widest">Services</h4>
+                        <ul class="footer-service-links space-y-3 text-sm text-brand-light-gray">
+                            <!-- Populated by script.js -->
+                        </ul>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <h4 class="text-white font-bold uppercase mb-6 text-sm tracking-widest">Social</h4>
+                        <div class="footer-social-links flex gap-4">
+                            <!-- Populated by script.js -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom -->
+            <div class="border-t border-brand-gray pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="footer-copyright text-xs text-brand-light-gray uppercase"></p>
+                <p class="footer-bottom-text text-[10px] text-brand-light-gray uppercase tracking-widest [&_a]:text-brand-orange [&_a]:hover:underline [&_a]:transition-colors"></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Static SEO content for crawlers that don't execute JavaScript -->
+    <noscript>
+    <article style="padding:2rem;max-width:800px;margin:auto;color:#e5e7eb;">
+        <h1>Bronian — Freelance Graphic Designer</h1>
+        <p>I'm Mohit (Bronian) — a freelance graphic designer based in India specializing in brand identities, print design, illustration, and video editing. I craft bold visuals and digital experiences that cut through the noise.</p>
+        <h2>Services</h2>
+        <ul>
+            <li>Brand Identity — Logo design, color systems, typography, brand guidelines</li>
+            <li>Video Editing — Cuts, transitions, color grading, sound design, motion graphics</li>
+            <li>Print & Packaging — Posters, business cards, brochures, packaging</li>
+            <li>Illustration — Custom digital illustrations, icon sets, visual assets</li>
+        </ul>
+        <h2>Contact</h2>
+        <p>Email: mahoitdhondial@gmail.com</p>
+        <p>Phone: +91 95993 31490</p>
+    </article>
+    </noscript>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+# Allow all search engine crawlers
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /review.html
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing / Microsoft
+User-agent: Bingbot
+Allow: /
+User-agent: msnbot
+Allow: /
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Yahoo
+User-agent: Slurp
+Allow: /
+
+# Yandex
+User-agent: YandexBot
+Allow: /
+
+# Baidu
+User-agent: Baiduspider
+Allow: /
+
+# Brave Search
+User-agent: BraveSearch
+Allow: /
+
+# AI / LLM Crawlers
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: Claude-Web
+Allow: /
+User-agent: anthropic-ai
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Bytespider
+Allow: /
+User-agent: cohere-ai
+Allow: /
+
+# LLM-readable content
+llms.txt: https://bronian.work.gd/llms.txt
+
+Sitemap: https://bronian.work.gd/sitemap.xml

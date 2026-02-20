@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Bronian</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=space-grotesk@400,500,600,700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-black': '#0a0a0a',
+                        'brand-dark': '#111111',
+                        'brand-orange': '#FF4500',
+                        'brand-gray': '#222222',
+                        'brand-light-gray': '#a3a3a3',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Space Grotesk', monospace; cursor: crosshair; }
+        h1, h2, h3, label { font-family: 'Clash Display', sans-serif; text-transform: uppercase; }
+
+        .bg-noise {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        input, select, textarea {
+            background: #111 !important;
+            border: 1px solid #333;
+            color: #f0f0f0;
+            font-family: 'Space Grotesk', monospace;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #FF4500;
+            outline: none;
+        }
+        select option { background: #111; color: #f0f0f0; }
+
+        .brutalist-card {
+            border: 1px solid #222;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .brutalist-card:hover {
+            border-color: #FF4500;
+        }
+
+        .toast {
+            animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .img-preview {
+            max-height: 200px;
+            object-fit: cover;
+            border: 1px solid #333;
+        }
+
+        .editing-highlight {
+            border-color: #FF4500 !important;
+            box-shadow: 0 0 0 1px #FF4500;
+        }
+
+        .tab-btn { transition: all 0.2s; }
+        .tab-btn.active { background: #FF4500; color: #000; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .toggle-btn { transition: all 0.15s ease; }
+        .toggle-btn.on { background: #FF4500; color: #000; border-color: #FF4500; }
+        .toggle-btn.off { background: transparent; color: #a3a3a3; border-color: #333; }
+    </style>
+</head>
+<body class="bg-brand-black text-[#f0f0f0] min-h-screen">
+    <!-- Noise Overlay -->
+    <div class="fixed inset-0 bg-noise z-0"></div>
+
+    <!-- ==========================================
+         PASSWORD GATE
+         ========================================== -->
+    <div id="authGate" class="fixed inset-0 z-[100] bg-brand-black flex items-center justify-center">
+        <div class="brutalist-card bg-brand-dark p-10 w-full max-w-md mx-6 text-center">
+            <div class="w-16 h-16 bg-brand-orange flex items-center justify-center mx-auto mb-6" style="clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);">
+                <i class="fa-solid fa-lock text-black text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold tracking-wider mb-2" style="font-family: 'Clash Display', sans-serif; text-transform: uppercase;">Admin Access</h2>
+            <p class="text-brand-light-gray text-xs uppercase tracking-widest mb-8">Enter password to continue</p>
+            <form id="authForm" class="space-y-4">
+                <input type="password" id="authPassword" placeholder="PASSWORD" required
+                    class="w-full px-4 py-4 text-sm text-center tracking-[0.3em] uppercase">
+                <button type="submit" id="authBtn"
+                    class="w-full bg-brand-orange text-black font-bold py-4 uppercase tracking-widest text-sm hover:bg-white transition-colors">
+                    <i class="fa-solid fa-arrow-right mr-2"></i>Unlock
+                </button>
+            </form>
+            <p id="authError" class="text-red-500 text-xs uppercase tracking-widest mt-4 hidden">
+                <i class="fa-solid fa-xmark mr-1"></i>Wrong password
+            </p>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         ADMIN CONTENT (hidden until authenticated)
+         ========================================== -->
+    <div id="adminContent" class="hidden">
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col gap-3"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-brand-black/90 backdrop-blur-md border-b border-brand-gray">
+        <div class="max-w-[1440px] mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-4 group cursor-pointer">
+                <div class="w-10 h-10 bg-brand-orange transform -rotate-12 group-hover:rotate-0 transition-transform duration-300 flex items-center justify-center border border-white">
+                    <span class="text-black font-bold text-xl">B</span>
+                </div>
+                <span class="font-display font-bold text-2xl tracking-tighter uppercase text-white">Bronian<span class="text-brand-orange">.</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-1">
+                <a href="/#work" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Work</a>
+                <a href="/#services" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Services</a>
+                <a href="/#about" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">About</a>
+                <a href="/#testimonials" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Reviews</a>
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="/#contact" class="hidden md:block border border-white px-6 py-2 text-sm uppercase font-bold hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300">
+                    Hire Me
+                </a>
+                <button onclick="logout()" class="border border-brand-gray px-4 py-2 text-xs uppercase tracking-widest text-red-500 border-red-500/30 hover:border-red-500 hover:bg-red-500/10 transition-colors">
+                    <i class="fa-solid fa-right-from-bracket mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Tab Navigation -->
+    <nav class="relative z-10 border-b border-brand-gray mt-20">
+        <div class="max-w-6xl mx-auto px-6 flex gap-0">
+            <button class="tab-btn active px-6 py-4 text-xs font-bold uppercase tracking-widest border-r border-brand-gray" data-tab="projects">
+                <i class="fa-solid fa-images mr-2"></i>Projects
+            </button>
+            <button class="tab-btn px-6 py-4 text-xs font-bold uppercase tracking-widest text-brand-light-gray hover:text-white border-r border-brand-gray" data-tab="reviews">
+                <i class="fa-solid fa-star mr-2"></i>Reviews <span id="pendingBadge" class="ml-1 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full hidden">0</span>
+            </button>
+            <button class="tab-btn px-6 py-4 text-xs font-bold uppercase tracking-widest text-brand-light-gray hover:text-white" data-tab="contacts">
+                <i class="fa-solid fa-envelope mr-2"></i>Messages <span id="unreadBadge" class="ml-1 bg-red-500 text-white text-[10px] px-1.5 py-0.5 rounded-full hidden">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="relative z-10 max-w-6xl mx-auto px-6 py-12">
+
+        <!-- Setup Notice -->
+        <div id="setupNotice" class="brutalist-card bg-brand-dark p-6 mb-10 border-l-4 border-l-brand-orange hidden">
+            <div class="flex items-start gap-4">
+                <i class="fa-solid fa-triangle-exclamation text-brand-orange text-xl mt-1"></i>
+                <div>
+                    <h3 class="text-lg font-bold mb-2">Setup Required</h3>
+                    <p class="text-brand-light-gray text-sm mb-3">Google Sheets URL not configured. CRUD operations won't persist.</p>
+                    <ol class="text-brand-light-gray text-sm mt-2 space-y-1 list-decimal list-inside">
+                        <li>Deploy the combined Apps Script from <code class="text-brand-orange">assets/docs/google-apps-script-combined.js</code></li>
+                        <li>Paste the Web App URL as <code class="text-brand-orange">"sheetURL"</code> in <code class="text-brand-orange">portfolio-data.json</code></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             PROJECTS TAB
+             ========================================== -->
+        <div id="tab-projects" class="tab-panel active">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+                <!-- Left: Add/Edit Project Form -->
+                <div class="lg:col-span-5">
+                    <div id="formCard" class="brutalist-card bg-brand-dark p-8">
+                        <div class="flex items-center justify-between mb-8 pb-4 border-b border-brand-gray">
+                            <span id="formTitle" class="text-brand-orange text-xs font-bold uppercase tracking-widest">/// Add Project</span>
+                            <button id="cancelEditBtn" onclick="cancelEdit()" class="hidden text-xs uppercase tracking-widest text-brand-light-gray hover:text-red-500 transition-colors">
+                                <i class="fa-solid fa-xmark mr-1"></i>Cancel
+                            </button>
+                        </div>
+
+                        <form id="projectForm" class="space-y-6">
+                            <input type="hidden" name="id" value="">
+
+                            <!-- Title -->
+                            <div>
+                                <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Project Title *</label>
+                                <input type="text" name="title" required placeholder="e.g. Neon Flux" class="w-full px-4 py-3 text-sm">
+                            </div>
+
+                            <!-- Category -->
+                            <div>
+                                <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Category *</label>
+                                <div class="relative">
+                                    <input type="text" name="category" required placeholder="Type or select a category" list="categoryList" class="w-full px-4 py-3 text-sm" autocomplete="off">
+                                    <datalist id="categoryList">
+                                        <option value="branding">Branding</option>
+                                        <option value="web">Web Design</option>
+                                        <option value="print">Print</option>
+                                        <option value="illustration">Illustration</option>
+                                    </datalist>
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-light-gray text-[10px] uppercase tracking-wider pointer-events-none">Custom OK</span>
+                                </div>
+                            </div>
+
+                            <!-- Year -->
+                            <div>
+                                <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Year</label>
+                                <input type="text" name="year" placeholder="e.g. 2024" class="w-full px-4 py-3 text-sm">
+                            </div>
+
+                            <!-- Description -->
+                            <div>
+                                <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Description *</label>
+                                <textarea name="description" required rows="3" placeholder="Short description of the project..." class="w-full px-4 py-3 text-sm resize-none"></textarea>
+                            </div>
+
+                            <!-- Image URL -->
+                            <div>
+                                <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Image URL *</label>
+                                <input type="url" name="image" required placeholder="https://images.unsplash.com/..." class="w-full px-4 py-3 text-sm" id="imageInput">
+                                <div id="imagePreview" class="mt-3 hidden">
+                                    <img src="" alt="Preview" class="img-preview w-full rounded">
+                                </div>
+                            </div>
+
+                            <!-- Aspect Ratio -->
+                            <div>
+                                <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Aspect Ratio</label>
+                                <select name="aspect" class="w-full px-4 py-3 text-sm">
+                                    <option value="1/1">1:1 — Square</option>
+                                    <option value="4/5">4:5 — Portrait</option>
+                                    <option value="3/4">3:4 — Portrait</option>
+                                    <option value="2/3">2:3 — Tall Portrait</option>
+                                    <option value="16/9">16:9 — Landscape</option>
+                                    <option value="3/2">3:2 — Landscape</option>
+                                </select>
+                            </div>
+
+                            <!-- Submit -->
+                            <button type="submit" id="submitBtn" class="w-full bg-brand-orange text-black font-bold py-4 uppercase tracking-widest text-sm hover:bg-white transition-colors">
+                                <span class="btn-text"><i class="fa-solid fa-plus mr-2"></i>Add Project</span>
+                                <span class="btn-loading hidden"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Saving...</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Right: Projects List -->
+                <div class="lg:col-span-7">
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-brand-orange text-xs font-bold uppercase tracking-widest">/// Projects <span id="projectCount" class="text-brand-light-gray">(0)</span></span>
+                        <button onclick="loadProjects()" class="text-xs uppercase tracking-widest text-brand-light-gray hover:text-brand-orange transition-colors">
+                            <i class="fa-solid fa-rotate mr-1"></i>Refresh
+                        </button>
+                    </div>
+
+                    <div id="loadingState" class="brutalist-card bg-brand-dark p-12 text-center">
+                        <i class="fa-solid fa-spinner fa-spin text-brand-orange text-2xl mb-4"></i>
+                        <p class="text-brand-light-gray text-sm uppercase tracking-widest">Loading projects...</p>
+                    </div>
+
+                    <div id="emptyState" class="brutalist-card bg-brand-dark p-12 text-center hidden">
+                        <i class="fa-solid fa-folder-open text-brand-gray text-4xl mb-4"></i>
+                        <p class="text-brand-light-gray text-sm uppercase tracking-widest">No projects yet</p>
+                        <p class="text-brand-light-gray text-xs mt-2">Add your first project using the form</p>
+                    </div>
+
+                    <div id="projectsList" class="space-y-4 hidden"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             REVIEWS TAB
+             ========================================== -->
+        <div id="tab-reviews" class="tab-panel">
+
+            <!-- Reviews Filter Bar -->
+            <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-brand-orange text-xs font-bold uppercase tracking-widest">/// Reviews <span id="reviewCount" class="text-brand-light-gray">(0)</span></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="filterReviews('all')" class="review-filter-btn text-xs uppercase tracking-widest px-3 py-1 border border-brand-orange text-brand-orange" data-filter="all">All</button>
+                    <button onclick="filterReviews('pending')" class="review-filter-btn text-xs uppercase tracking-widest px-3 py-1 border border-brand-gray text-brand-light-gray hover:border-brand-orange hover:text-brand-orange transition-colors" data-filter="pending">Pending</button>
+                    <button onclick="filterReviews('approved')" class="review-filter-btn text-xs uppercase tracking-widest px-3 py-1 border border-brand-gray text-brand-light-gray hover:border-brand-orange hover:text-brand-orange transition-colors" data-filter="approved">Approved</button>
+                    <button onclick="loadReviews()" class="text-xs uppercase tracking-widest text-brand-light-gray hover:text-brand-orange transition-colors ml-2">
+                        <i class="fa-solid fa-rotate mr-1"></i>Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reviews Loading -->
+            <div id="reviewsLoading" class="brutalist-card bg-brand-dark p-12 text-center">
+                <i class="fa-solid fa-spinner fa-spin text-brand-orange text-2xl mb-4"></i>
+                <p class="text-brand-light-gray text-sm uppercase tracking-widest">Loading reviews...</p>
+            </div>
+
+            <!-- Reviews Empty -->
+            <div id="reviewsEmpty" class="brutalist-card bg-brand-dark p-12 text-center hidden">
+                <i class="fa-solid fa-star text-brand-gray text-4xl mb-4"></i>
+                <p class="text-brand-light-gray text-sm uppercase tracking-widest">No reviews yet</p>
+                <p class="text-brand-light-gray text-xs mt-2">Share <code class="text-brand-orange">review.html</code> with your clients</p>
+            </div>
+
+            <!-- Reviews List -->
+            <div id="reviewsList" class="space-y-4 hidden"></div>
+        </div>
+
+        <!-- ==========================================
+             CONTACTS TAB
+             ========================================== -->
+        <div id="tab-contacts" class="tab-panel">
+
+            <!-- Contacts Filter Bar -->
+            <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-brand-orange text-xs font-bold uppercase tracking-widest">/// Messages <span id="contactCount" class="text-brand-light-gray">(0)</span></span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="filterContacts('all')" class="contact-filter-btn text-xs uppercase tracking-widest px-3 py-1 border border-brand-orange text-brand-orange" data-filter="all">All</button>
+                    <button onclick="filterContacts('unread')" class="contact-filter-btn text-xs uppercase tracking-widest px-3 py-1 border border-brand-gray text-brand-light-gray hover:border-brand-orange hover:text-brand-orange transition-colors" data-filter="unread">Unread</button>
+                    <button onclick="filterContacts('read')" class="contact-filter-btn text-xs uppercase tracking-widest px-3 py-1 border border-brand-gray text-brand-light-gray hover:border-brand-orange hover:text-brand-orange transition-colors" data-filter="read">Read</button>
+                    <button onclick="filterContacts('replied')" class="contact-filter-btn text-xs uppercase tracking-widest px-3 py-1 border border-brand-gray text-brand-light-gray hover:border-brand-orange hover:text-brand-orange transition-colors" data-filter="replied">Replied</button>
+                    <button onclick="loadContacts()" class="text-xs uppercase tracking-widest text-brand-light-gray hover:text-brand-orange transition-colors ml-2">
+                        <i class="fa-solid fa-rotate mr-1"></i>Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Contacts Loading -->
+            <div id="contactsLoading" class="brutalist-card bg-brand-dark p-12 text-center">
+                <i class="fa-solid fa-spinner fa-spin text-brand-orange text-2xl mb-4"></i>
+                <p class="text-brand-light-gray text-sm uppercase tracking-widest">Loading messages...</p>
+            </div>
+
+            <!-- Contacts Empty -->
+            <div id="contactsEmpty" class="brutalist-card bg-brand-dark p-12 text-center hidden">
+                <i class="fa-solid fa-envelope text-brand-gray text-4xl mb-4"></i>
+                <p class="text-brand-light-gray text-sm uppercase tracking-widest">No messages yet</p>
+                <p class="text-brand-light-gray text-xs mt-2">Messages from the contact form will appear here</p>
+            </div>
+
+            <!-- Contacts List -->
+            <div id="contactsList" class="space-y-4 hidden"></div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-brand-black border-t border-brand-gray pt-12 pb-8 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-12 gap-10">
+                <div class="max-w-xs">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-8 h-8 bg-brand-orange flex items-center justify-center border border-white">
+                            <span class="text-black font-bold text-lg">B</span>
+                        </div>
+                        <span class="font-display font-bold text-xl tracking-tighter uppercase text-white">Bronian<span class="text-brand-orange">.</span></span>
+                    </div>
+                    <p class="text-brand-light-gray text-sm">Freelance graphic designer crafting bold brand identities and digital experiences. Based in India, working globally.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-12">
+                    <div>
+                        <h4 class="text-white font-bold uppercase mb-4 text-sm tracking-widest">Navigate</h4>
+                        <ul class="space-y-3 text-sm text-brand-light-gray">
+                            <li><a href="/#work" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Work</a></li>
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Services</a></li>
+                            <li><a href="/#about" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">About</a></li>
+                            <li><a href="/#contact" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold uppercase mb-4 text-sm tracking-widest">Services</h4>
+                        <ul class="space-y-3 text-sm text-brand-light-gray">
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Brand Identity</a></li>
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Video Editing</a></li>
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Print Design</a></li>
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Illustration</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-brand-gray pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-brand-light-gray uppercase">&copy; <script>document.write(new Date().getFullYear())</script> Bronian. All rights reserved.</p>
+                <p class="text-[10px] text-brand-light-gray uppercase tracking-widest">Crafted with intent by <a href="https://siddharthmhjn.com" target="_blank" class="text-brand-orange hover:underline transition-colors">siddharthmhjn.com</a></p>
+            </div>
+        </div>
+    </footer>
+
+    </div><!-- /adminContent -->
+
+    <script>
+        // ==========================================
+        // PASSWORD GATE
+        // Default password: "admin123" — change the hash below to use your own.
+        // To generate a hash for your password, open browser console and run:
+        //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_PASSWORD')).then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('')))
+        // Then replace ADMIN_HASH with the output.
+        // ==========================================
+        var ADMIN_HASH = '2e592ef11ae95c174b246e219cf5d0dcffb9b13d36fb4086ea42206aaed82ac3'; // SHA-256 hash
+        var SESSION_TIMEOUT = 60 * 60 * 1000; // 1 hour in milliseconds
+        var logoutTimer = null;
+
+        async function sha256(text) {
+            var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+            return [...new Uint8Array(buf)].map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+        }
+
+        function startLogoutTimer() {
+            if (logoutTimer) clearTimeout(logoutTimer);
+            var loginTime = parseInt(sessionStorage.getItem('admin_auth_time') || '0');
+            var remaining = SESSION_TIMEOUT - (Date.now() - loginTime);
+            if (remaining <= 0) {
+                logout();
+                return;
+            }
+            logoutTimer = setTimeout(function () {
+                logout();
+                alert('Session expired. Please log in again.');
+            }, remaining);
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            var pw = document.getElementById('authPassword').value;
+            var hash = await sha256(pw);
+
+            if (hash === ADMIN_HASH) {
+                document.getElementById('authGate').classList.add('hidden');
+                document.getElementById('adminContent').classList.remove('hidden');
+                sessionStorage.setItem('admin_auth', hash);
+                sessionStorage.setItem('admin_auth_time', Date.now().toString());
+                startLogoutTimer();
+                init();
+            } else {
+                var errEl = document.getElementById('authError');
+                errEl.classList.remove('hidden');
+                document.getElementById('authPassword').value = '';
+                document.getElementById('authPassword').focus();
+                setTimeout(function () { errEl.classList.add('hidden'); }, 3000);
+            }
+        });
+
+        // Auto-login if already authenticated this session (and not expired)
+        (async function () {
+            var stored = sessionStorage.getItem('admin_auth');
+            var loginTime = parseInt(sessionStorage.getItem('admin_auth_time') || '0');
+            if (stored === ADMIN_HASH && (Date.now() - loginTime) < SESSION_TIMEOUT) {
+                document.getElementById('authGate').classList.add('hidden');
+                document.getElementById('adminContent').classList.remove('hidden');
+                startLogoutTimer();
+                init();
+            } else if (stored) {
+                // Expired — clear stale session
+                sessionStorage.removeItem('admin_auth');
+                sessionStorage.removeItem('admin_auth_time');
+            }
+        })();
+
+        // ==========================================
+        // GLOBALS
+        // ==========================================
+        var SHEET_URL = '';
+        var allProjects = [];
+        var allReviews = [];
+        var allContacts = [];
+        var editingId = null;
+        var currentReviewFilter = 'all';
+        var currentContactFilter = 'all';
+
+        // ==========================================
+        // TAB NAVIGATION
+        // ==========================================
+        document.querySelectorAll('.tab-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var tab = btn.getAttribute('data-tab');
+
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(function (b) {
+                    b.classList.remove('active');
+                    b.classList.add('text-brand-light-gray');
+                });
+                btn.classList.add('active');
+                btn.classList.remove('text-brand-light-gray');
+
+                // Update panels
+                document.querySelectorAll('.tab-panel').forEach(function (p) {
+                    p.classList.remove('active');
+                });
+                document.getElementById('tab-' + tab).classList.add('active');
+
+                // Load data on first switch
+                if (tab === 'reviews' && allReviews.length === 0) {
+                    loadReviews();
+                }
+                if (tab === 'contacts' && allContacts.length === 0) {
+                    loadContacts();
+                }
+            });
+        });
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        async function init() {
+            try {
+                var res = await fetch('portfolio-data.json');
+                if (res.ok) {
+                    var config = await res.json();
+                    SHEET_URL = config.sheetURL || '';
+                }
+            } catch (e) {
+                console.log('Could not load config:', e);
+            }
+
+            if (!SHEET_URL || SHEET_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                SHEET_URL = '';
+                document.getElementById('setupNotice').classList.remove('hidden');
+            }
+
+            loadProjects();
+            loadReviews();
+            loadContacts();
+        }
+
+        // ==========================================
+        // UTILITY
+        // ==========================================
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.textContent = str || '';
+            return div.innerHTML;
+        }
+
+        function hexToDataURL(hex) {
+            if (!hex || hex.startsWith('http') || hex.startsWith('data:')) return hex;
+            var bytes = new Uint8Array(hex.length / 2);
+            for (var i = 0; i < hex.length; i += 2) {
+                bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+            }
+            var binary = '';
+            for (var j = 0; j < bytes.length; j++) {
+                binary += String.fromCharCode(bytes[j]);
+            }
+            return 'data:image/jpeg;base64,' + btoa(binary);
+        }
+
+        function showToast(message, type) {
+            var container = document.getElementById('toastContainer');
+            var bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-brand-orange';
+            var icon = type === 'success' ? 'fa-check' : type === 'error' ? 'fa-xmark' : 'fa-info';
+
+            var toast = document.createElement('div');
+            toast.className = 'toast flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-white ' + bgColor;
+            toast.innerHTML = '<i class="fa-solid ' + icon + '"></i>' + message;
+            container.appendChild(toast);
+
+            setTimeout(function () { toast.remove(); }, 3000);
+        }
+
+        function renderStars(rating) {
+            var stars = '';
+            for (var i = 1; i <= 5; i++) {
+                stars += '<i class="fa-solid fa-star ' + (i <= rating ? 'text-brand-orange' : 'text-brand-gray') + ' text-xs"></i>';
+            }
+            return stars;
+        }
+
+        // ==========================================
+        // ===== PROJECTS SECTION =====
+        // ==========================================
+
+        var categoryLabels = {
+            branding: 'Branding',
+            web: 'Web Design',
+            print: 'Print',
+            illustration: 'Illustration'
+        };
+
+        // LOAD PROJECTS
+        async function loadProjects() {
+            var loadingEl = document.getElementById('loadingState');
+            var emptyEl = document.getElementById('emptyState');
+            var listEl = document.getElementById('projectsList');
+            var countEl = document.getElementById('projectCount');
+
+            loadingEl.classList.remove('hidden');
+            emptyEl.classList.add('hidden');
+            listEl.classList.add('hidden');
+
+            allProjects = [];
+
+            if (SHEET_URL) {
+                try {
+                    var res = await fetch(SHEET_URL + '?type=projects');
+                    if (res.ok) {
+                        var data = await res.json();
+                        if (data.status === 'success' && Array.isArray(data.projects)) {
+                            allProjects = data.projects;
+                        }
+                    }
+                } catch (e) {
+                    console.log('Sheet fetch failed:', e);
+                    showToast('Failed to load projects', 'error');
+                }
+            }
+
+            loadingEl.classList.add('hidden');
+            countEl.textContent = '(' + allProjects.length + ')';
+
+            if (allProjects.length === 0) {
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            listEl.classList.remove('hidden');
+            renderProjectsList(allProjects);
+        }
+
+        function updateCategoryDatalist() {
+            var datalist = document.getElementById('categoryList');
+            var existing = {};
+            datalist.querySelectorAll('option').forEach(function (opt) {
+                existing[opt.value] = true;
+            });
+            allProjects.forEach(function (p) {
+                if (p.category && !existing[p.category]) {
+                    var opt = document.createElement('option');
+                    opt.value = p.category;
+                    opt.textContent = p.category.charAt(0).toUpperCase() + p.category.slice(1);
+                    datalist.appendChild(opt);
+                    existing[p.category] = true;
+                }
+            });
+        }
+
+        // RENDER PROJECTS LIST
+        function renderProjectsList(projects) {
+            updateCategoryDatalist();
+            var listEl = document.getElementById('projectsList');
+            listEl.innerHTML = projects.map(function (p) {
+                var catLabel = categoryLabels[p.category] || (p.category ? p.category.charAt(0).toUpperCase() + p.category.slice(1) : p.category);
+                var isEditing = editingId === p.id;
+                var highlightClass = isEditing ? ' editing-highlight' : '';
+
+                return '<div id="row-' + p.id + '" class="brutalist-card bg-brand-dark p-4' + highlightClass + '">' +
+                    '<div class="flex items-start gap-4">' +
+                        '<div class="w-20 h-20 shrink-0 overflow-hidden border border-brand-gray">' +
+                            '<img src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.title) + '" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" loading="lazy">' +
+                        '</div>' +
+                        '<div class="flex-1 min-w-0">' +
+                            '<div class="flex items-center gap-3 mb-1">' +
+                                '<h3 class="text-lg font-bold text-white truncate">' + escapeHtml(p.title) + '</h3>' +
+                                '<span class="text-xs text-brand-light-gray border border-brand-gray px-2 py-0.5 uppercase shrink-0">' + escapeHtml(p.year) + '</span>' +
+                            '</div>' +
+                            '<span class="text-xs text-brand-orange uppercase tracking-wider">' + escapeHtml(catLabel) + '</span>' +
+                            '<p class="text-brand-light-gray text-xs mt-1 line-clamp-2">' + escapeHtml(p.description) + '</p>' +
+                            '<p class="text-brand-gray text-[10px] mt-2 font-mono">ID: ' + escapeHtml(p.id) + ' · Aspect: ' + escapeHtml(p.aspect) + '</p>' +
+                        '</div>' +
+                        '<div class="shrink-0 flex flex-col gap-2">' +
+                            '<button onclick="editProject(\'' + p.id + '\')" class="w-10 h-10 border border-brand-gray text-brand-light-gray hover:border-brand-orange hover:text-brand-orange hover:bg-brand-orange/10 transition-colors flex items-center justify-center" title="Edit">' +
+                                '<i class="fa-solid fa-pen text-sm"></i>' +
+                            '</button>' +
+                            '<button onclick="deleteProject(\'' + p.id + '\')" class="w-10 h-10 border border-brand-gray text-brand-light-gray hover:border-red-500 hover:text-red-500 hover:bg-red-500/10 transition-colors flex items-center justify-center" title="Delete">' +
+                                '<i class="fa-solid fa-trash-can text-sm"></i>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        // PROJECT FORM SUBMIT
+        document.getElementById('projectForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            var form = this;
+            var submitBtn = document.getElementById('submitBtn');
+            var btnText = submitBtn.querySelector('.btn-text');
+            var btnLoading = submitBtn.querySelector('.btn-loading');
+
+            var id = form.querySelector('[name="id"]').value;
+            var title = form.querySelector('[name="title"]').value.trim();
+            var category = form.querySelector('[name="category"]').value;
+            var year = form.querySelector('[name="year"]').value.trim() || new Date().getFullYear().toString();
+            var description = form.querySelector('[name="description"]').value.trim();
+            var image = form.querySelector('[name="image"]').value.trim();
+            var aspect = form.querySelector('[name="aspect"]').value;
+
+            if (!title || !category || !description || !image) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            btnText.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+
+            var isUpdate = !!id;
+            var project = {
+                id: id || 'project_' + Date.now(),
+                title: title,
+                category: category,
+                year: year,
+                description: description,
+                image: image,
+                aspect: aspect
+            };
+
+            var action = isUpdate ? 'update' : 'add';
+
+            if (SHEET_URL) {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'projects', action: action, project: project })
+                    });
+                    showToast(isUpdate ? 'Project updated!' : 'Project added!', 'success');
+                    cancelEdit();
+                    form.reset();
+                    form.querySelector('[name="id"]').value = '';
+                    document.getElementById('imagePreview').classList.add('hidden');
+                    setTimeout(loadProjects, 1500);
+                } catch (err) {
+                    console.error(action + ' error:', err);
+                    showToast('Failed to ' + action + ' project', 'error');
+                }
+            } else {
+                var jsonOutput = JSON.stringify(project, null, 2);
+                if (isUpdate) {
+                    showToast('Update the project in portfolio-data.json manually', 'info');
+                    prompt('Replace the project with id "' + id + '" in portfolio-data.json:', jsonOutput);
+                } else {
+                    showToast('Add this to portfolio-data.json manually', 'info');
+                    prompt('Copy this JSON and add it to the "projects" array:', jsonOutput);
+                }
+                cancelEdit();
+            }
+
+            submitBtn.disabled = false;
+            btnText.classList.remove('hidden');
+            btnLoading.classList.add('hidden');
+        });
+
+        // EDIT PROJECT
+        function editProject(id) {
+            var project = allProjects.find(function (p) { return p.id === id; });
+            if (!project) { showToast('Project not found', 'error'); return; }
+
+            editingId = id;
+
+            var form = document.getElementById('projectForm');
+            form.querySelector('[name="id"]').value = project.id;
+            form.querySelector('[name="title"]').value = project.title || '';
+            form.querySelector('[name="category"]').value = project.category || '';
+            form.querySelector('[name="year"]').value = project.year || '';
+            form.querySelector('[name="description"]').value = project.description || '';
+            form.querySelector('[name="image"]').value = project.image || '';
+            form.querySelector('[name="aspect"]').value = project.aspect || '1/1';
+
+            document.getElementById('formTitle').textContent = '/// Edit Project';
+            document.getElementById('formCard').classList.add('editing-highlight');
+            document.getElementById('cancelEditBtn').classList.remove('hidden');
+
+            var btnText = document.querySelector('#submitBtn .btn-text');
+            btnText.innerHTML = '<i class="fa-solid fa-check mr-2"></i>Update Project';
+
+            var previewContainer = document.getElementById('imagePreview');
+            var img = previewContainer.querySelector('img');
+            if (project.image) { img.src = project.image; previewContainer.classList.remove('hidden'); }
+
+            renderProjectsList(allProjects);
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // CANCEL EDIT
+        function cancelEdit() {
+            editingId = null;
+            var form = document.getElementById('projectForm');
+            form.reset();
+            form.querySelector('[name="id"]').value = '';
+
+            document.getElementById('formTitle').textContent = '/// Add Project';
+            document.getElementById('formCard').classList.remove('editing-highlight');
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+            document.getElementById('imagePreview').classList.add('hidden');
+
+            var btnText = document.querySelector('#submitBtn .btn-text');
+            btnText.innerHTML = '<i class="fa-solid fa-plus mr-2"></i>Add Project';
+
+            renderProjectsList(allProjects);
+        }
+
+        // DELETE PROJECT
+        async function deleteProject(id) {
+            if (!confirm('Delete this project? This cannot be undone.')) return;
+            if (editingId === id) cancelEdit();
+
+            if (SHEET_URL) {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'projects', action: 'delete', project: { id: id } })
+                    });
+                    showToast('Project deleted', 'success');
+                    setTimeout(loadProjects, 1500);
+                } catch (err) {
+                    showToast('Failed to delete project', 'error');
+                }
+            } else {
+                showToast('Remove project "' + id + '" from portfolio-data.json manually', 'info');
+            }
+        }
+
+        // IMAGE PREVIEW
+        document.getElementById('imageInput').addEventListener('input', function () {
+            var url = this.value.trim();
+            var previewContainer = document.getElementById('imagePreview');
+            var img = previewContainer.querySelector('img');
+            if (url) {
+                img.src = url;
+                img.onload = function () { previewContainer.classList.remove('hidden'); };
+                img.onerror = function () { previewContainer.classList.add('hidden'); };
+            } else {
+                previewContainer.classList.add('hidden');
+            }
+        });
+
+        // ==========================================
+        // ===== REVIEWS SECTION =====
+        // ==========================================
+
+        // LOAD REVIEWS (all, including pending)
+        async function loadReviews() {
+            var loadingEl = document.getElementById('reviewsLoading');
+            var emptyEl = document.getElementById('reviewsEmpty');
+            var listEl = document.getElementById('reviewsList');
+            var countEl = document.getElementById('reviewCount');
+
+            loadingEl.classList.remove('hidden');
+            emptyEl.classList.add('hidden');
+            listEl.classList.add('hidden');
+
+            allReviews = [];
+
+            if (SHEET_URL) {
+                try {
+                    var res = await fetch(SHEET_URL + '?type=reviews&mode=all');
+                    if (res.ok) {
+                        var data = await res.json();
+                        if (data.status === 'success' && Array.isArray(data.reviews)) {
+                            allReviews = data.reviews;
+                        }
+                    }
+                } catch (e) {
+                    console.log('Reviews fetch failed:', e);
+                    showToast('Failed to load reviews', 'error');
+                }
+            }
+
+            loadingEl.classList.add('hidden');
+            countEl.textContent = '(' + allReviews.length + ')';
+
+            // Update pending badge
+            var pendingCount = allReviews.filter(function (r) { return !r.approved; }).length;
+            var badge = document.getElementById('pendingBadge');
+            if (pendingCount > 0) {
+                badge.textContent = pendingCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            if (allReviews.length === 0) {
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            listEl.classList.remove('hidden');
+            renderReviewsList();
+        }
+
+        // FILTER REVIEWS
+        function filterReviews(filter) {
+            currentReviewFilter = filter;
+
+            // Update filter button styles
+            document.querySelectorAll('.review-filter-btn').forEach(function (btn) {
+                if (btn.getAttribute('data-filter') === filter) {
+                    btn.classList.remove('border-brand-gray', 'text-brand-light-gray');
+                    btn.classList.add('border-brand-orange', 'text-brand-orange');
+                } else {
+                    btn.classList.add('border-brand-gray', 'text-brand-light-gray');
+                    btn.classList.remove('border-brand-orange', 'text-brand-orange');
+                }
+            });
+
+            renderReviewsList();
+        }
+
+        // RENDER REVIEWS LIST
+        function renderReviewsList() {
+            var listEl = document.getElementById('reviewsList');
+            var filtered = allReviews;
+
+            if (currentReviewFilter === 'pending') {
+                filtered = allReviews.filter(function (r) { return !r.approved; });
+            } else if (currentReviewFilter === 'approved') {
+                filtered = allReviews.filter(function (r) { return r.approved; });
+            }
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = '<div class="brutalist-card bg-brand-dark p-8 text-center"><p class="text-brand-light-gray text-sm uppercase tracking-widest">No ' + currentReviewFilter + ' reviews</p></div>';
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(function (r) {
+                var approvedClass = r.approved ? 'on' : 'off';
+                var featuredClass = r.featured ? 'on' : 'off';
+                var borderColor = !r.approved ? 'border-l-4 border-l-yellow-500' : r.featured ? 'border-l-4 border-l-brand-orange' : '';
+                var statusLabel = !r.approved ? '<span class="text-[10px] bg-yellow-500/20 text-yellow-500 px-2 py-0.5 uppercase tracking-wider">Pending</span>' :
+                    r.featured ? '<span class="text-[10px] bg-brand-orange/20 text-brand-orange px-2 py-0.5 uppercase tracking-wider">Featured</span>' :
+                    '<span class="text-[10px] bg-green-500/20 text-green-500 px-2 py-0.5 uppercase tracking-wider">Approved</span>';
+
+                var imgSrc = r.image ? hexToDataURL(r.image) : '';
+                var imgHtml = imgSrc
+                    ? '<img src="' + escapeHtml(imgSrc) + '" alt="' + escapeHtml(r.name) + '" class="w-12 h-12 rounded-full object-cover border border-brand-gray shrink-0">'
+                    : '<div class="w-12 h-12 rounded-full bg-brand-gray flex items-center justify-center shrink-0"><i class="fa-solid fa-user text-brand-light-gray"></i></div>';
+
+                var timestamp = r.timestamp ? new Date(r.timestamp).toLocaleDateString() : '';
+
+                return '<div class="brutalist-card bg-brand-dark p-5 ' + borderColor + '">' +
+                    '<div class="flex items-start gap-4">' +
+                        imgHtml +
+                        '<div class="flex-1 min-w-0">' +
+                            '<div class="flex items-center gap-3 mb-1 flex-wrap">' +
+                                '<h3 class="text-base font-bold text-white">' + escapeHtml(r.name) + '</h3>' +
+                                statusLabel +
+                            '</div>' +
+                            '<p class="text-xs text-brand-light-gray uppercase tracking-wider">' + escapeHtml(r.role) + '</p>' +
+                            (r.email ? '<p class="text-[10px] text-brand-gray font-mono mt-0.5"><i class="fa-solid fa-envelope mr-1"></i>' + escapeHtml(r.email) + '</p>' : '') +
+                            '<div class="flex items-center gap-1 mt-1">' + renderStars(r.rating) + '</div>' +
+                            '<p class="text-brand-light-gray text-sm mt-2 italic">"' + escapeHtml(r.quote) + '"</p>' +
+                            '<p class="text-brand-gray text-[10px] mt-2 font-mono">' + escapeHtml(timestamp) + '</p>' +
+                        '</div>' +
+                        '<div class="shrink-0 flex flex-col gap-2">' +
+                            '<button onclick="toggleApproved(\'' + r.id + '\')" class="toggle-btn ' + approvedClass + ' w-10 h-10 border flex items-center justify-center" title="' + (r.approved ? 'Revoke approval' : 'Approve') + '">' +
+                                '<i class="fa-solid fa-check text-sm"></i>' +
+                            '</button>' +
+                            '<button onclick="toggleFeatured(\'' + r.id + '\')" class="toggle-btn ' + featuredClass + ' w-10 h-10 border flex items-center justify-center" title="' + (r.featured ? 'Unfeature' : 'Mark as featured') + '">' +
+                                '<i class="fa-solid fa-star text-sm"></i>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        // TOGGLE APPROVED
+        async function toggleApproved(id) {
+            var review = allReviews.find(function (r) { return r.id === id; });
+            if (!review) return;
+
+            var newValue = !review.approved;
+
+            if (SHEET_URL) {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'reviews', action: 'update', review: { id: id, approved: newValue } })
+                    });
+                    review.approved = newValue;
+                    if (!newValue) review.featured = false; // Remove featured if unapproved
+                    showToast(newValue ? 'Review approved' : 'Approval revoked', 'success');
+                    renderReviewsList();
+                    updatePendingBadge();
+                } catch (err) {
+                    showToast('Failed to update review', 'error');
+                }
+            } else {
+                showToast('Configure sheetURL first', 'error');
+            }
+        }
+
+        // TOGGLE FEATURED
+        async function toggleFeatured(id) {
+            var review = allReviews.find(function (r) { return r.id === id; });
+            if (!review) return;
+
+            if (!review.approved) {
+                showToast('Approve the review first', 'error');
+                return;
+            }
+
+            var newValue = !review.featured;
+
+            if (SHEET_URL) {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'reviews', action: 'update', review: { id: id, featured: newValue } })
+                    });
+                    review.featured = newValue;
+                    showToast(newValue ? 'Marked as featured' : 'Removed from featured', 'success');
+                    renderReviewsList();
+                } catch (err) {
+                    showToast('Failed to update review', 'error');
+                }
+            } else {
+                showToast('Configure sheetURL first', 'error');
+            }
+        }
+
+        // DELETE REVIEW
+        async function deleteReview(id) {
+            if (!confirm('Delete this review? This cannot be undone.')) return;
+
+            if (SHEET_URL) {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'reviews', action: 'delete', review: { id: id } })
+                    });
+                    showToast('Review deleted', 'success');
+                    setTimeout(loadReviews, 1500);
+                } catch (err) {
+                    showToast('Failed to delete review', 'error');
+                }
+            } else {
+                showToast('Configure sheetURL first', 'error');
+            }
+        }
+
+        // UPDATE PENDING BADGE
+        function updatePendingBadge() {
+            var pendingCount = allReviews.filter(function (r) { return !r.approved; }).length;
+            var badge = document.getElementById('pendingBadge');
+            if (pendingCount > 0) {
+                badge.textContent = pendingCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // ==========================================
+        // ===== CONTACTS SECTION =====
+        // ==========================================
+
+        // LOAD CONTACTS
+        async function loadContacts() {
+            var loadingEl = document.getElementById('contactsLoading');
+            var emptyEl = document.getElementById('contactsEmpty');
+            var listEl = document.getElementById('contactsList');
+            var countEl = document.getElementById('contactCount');
+
+            loadingEl.classList.remove('hidden');
+            emptyEl.classList.add('hidden');
+            listEl.classList.add('hidden');
+
+            allContacts = [];
+
+            if (SHEET_URL) {
+                try {
+                    var res = await fetch(SHEET_URL + '?type=contacts');
+                    if (res.ok) {
+                        var data = await res.json();
+                        if (data.status === 'success' && Array.isArray(data.contacts)) {
+                            allContacts = data.contacts;
+                        }
+                    }
+                } catch (e) {
+                    console.log('Contacts fetch failed:', e);
+                    showToast('Failed to load messages', 'error');
+                }
+            }
+
+            loadingEl.classList.add('hidden');
+            countEl.textContent = '(' + allContacts.length + ')';
+
+            updateUnreadBadge();
+
+            if (allContacts.length === 0) {
+                emptyEl.classList.remove('hidden');
+                return;
+            }
+
+            listEl.classList.remove('hidden');
+            renderContactsList();
+        }
+
+        // UPDATE UNREAD BADGE
+        function updateUnreadBadge() {
+            var unreadCount = allContacts.filter(function (c) { return !c.read; }).length;
+            var badge = document.getElementById('unreadBadge');
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // FILTER CONTACTS
+        function filterContacts(filter) {
+            currentContactFilter = filter;
+
+            document.querySelectorAll('.contact-filter-btn').forEach(function (btn) {
+                if (btn.getAttribute('data-filter') === filter) {
+                    btn.classList.remove('border-brand-gray', 'text-brand-light-gray');
+                    btn.classList.add('border-brand-orange', 'text-brand-orange');
+                } else {
+                    btn.classList.add('border-brand-gray', 'text-brand-light-gray');
+                    btn.classList.remove('border-brand-orange', 'text-brand-orange');
+                }
+            });
+
+            renderContactsList();
+        }
+
+        // RENDER CONTACTS LIST
+        function renderContactsList() {
+            var listEl = document.getElementById('contactsList');
+            var filtered = allContacts;
+
+            if (currentContactFilter === 'unread') {
+                filtered = allContacts.filter(function (c) { return !c.read; });
+            } else if (currentContactFilter === 'read') {
+                filtered = allContacts.filter(function (c) { return c.read && !c.replied; });
+            } else if (currentContactFilter === 'replied') {
+                filtered = allContacts.filter(function (c) { return c.replied; });
+            }
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = '<div class="brutalist-card bg-brand-dark p-8 text-center"><p class="text-brand-light-gray text-sm uppercase tracking-widest">No ' + currentContactFilter + ' messages</p></div>';
+                return;
+            }
+
+            listEl.innerHTML = filtered.map(function (c) {
+                var readClass = c.read ? 'on' : 'off';
+                var repliedClass = c.replied ? 'on' : 'off';
+                var borderColor = !c.read ? 'border-l-4 border-l-blue-500' : c.replied ? 'border-l-4 border-l-green-500' : 'border-l-4 border-l-brand-gray';
+                var statusLabel = !c.read
+                    ? '<span class="text-[10px] bg-blue-500/20 text-blue-400 px-2 py-0.5 uppercase tracking-wider">New</span>'
+                    : c.replied
+                    ? '<span class="text-[10px] bg-green-500/20 text-green-500 px-2 py-0.5 uppercase tracking-wider">Replied</span>'
+                    : '<span class="text-[10px] bg-brand-gray/30 text-brand-light-gray px-2 py-0.5 uppercase tracking-wider">Read</span>';
+
+                var serviceLabel = c.service ? '<span class="text-[10px] border border-brand-gray text-brand-light-gray px-2 py-0.5 uppercase tracking-wider">' + escapeHtml(c.service) + '</span>' : '';
+
+                var timestamp = c.timestamp ? new Date(c.timestamp).toLocaleDateString() + ' ' + new Date(c.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+
+                return '<div class="brutalist-card bg-brand-dark p-5 ' + borderColor + '">' +
+                    '<div class="flex items-start gap-4">' +
+                        '<div class="w-12 h-12 rounded-full bg-brand-gray flex items-center justify-center shrink-0">' +
+                            '<i class="fa-solid fa-envelope ' + (!c.read ? 'text-blue-400' : 'text-brand-light-gray') + '"></i>' +
+                        '</div>' +
+                        '<div class="flex-1 min-w-0">' +
+                            '<div class="flex items-center gap-3 mb-1 flex-wrap">' +
+                                '<h3 class="text-base font-bold ' + (!c.read ? 'text-white' : 'text-brand-light-gray') + '">' + escapeHtml(c.name) + '</h3>' +
+                                statusLabel + serviceLabel +
+                            '</div>' +
+                            '<p class="text-xs text-brand-light-gray font-mono"><i class="fa-solid fa-envelope mr-1"></i>' + escapeHtml(c.email) + '</p>' +
+                            '<p class="text-brand-light-gray text-sm mt-2 ' + (!c.read ? 'font-medium' : '') + '">' + escapeHtml(c.message) + '</p>' +
+                            '<p class="text-brand-gray text-[10px] mt-2 font-mono">' + escapeHtml(timestamp) + '</p>' +
+                        '</div>' +
+                        '<div class="shrink-0 flex flex-col gap-2">' +
+                            '<button onclick="toggleRead(\'' + c.id + '\')" class="toggle-btn ' + readClass + ' w-10 h-10 border flex items-center justify-center" title="' + (c.read ? 'Mark as unread' : 'Mark as read') + '">' +
+                                '<i class="fa-solid fa-eye text-sm"></i>' +
+                            '</button>' +
+                            '<button onclick="toggleReplied(\'' + c.id + '\')" class="toggle-btn ' + repliedClass + ' w-10 h-10 border flex items-center justify-center" title="' + (c.replied ? 'Mark as not replied' : 'Mark as replied') + '">' +
+                                '<i class="fa-solid fa-reply text-sm"></i>' +
+                            '</button>' +
+                            '<button onclick="deleteContact(\'' + c.id + '\')" class="w-10 h-10 border border-brand-gray text-brand-light-gray hover:border-red-500 hover:text-red-500 hover:bg-red-500/10 transition-colors flex items-center justify-center" title="Delete">' +
+                                '<i class="fa-solid fa-trash-can text-sm"></i>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        // TOGGLE READ
+        async function toggleRead(id) {
+            var contact = allContacts.find(function (c) { return c.id === id; });
+            if (!contact) return;
+
+            var newValue = !contact.read;
+
+            if (SHEET_URL) {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'contacts', action: 'update', contact: { id: id, read: newValue } })
+                    });
+                    contact.read = newValue;
+                    if (!newValue) contact.replied = false;
+                    showToast(newValue ? 'Marked as read' : 'Marked as unread', 'success');
+                    renderContactsList();
+                    updateUnreadBadge();
+                } catch (err) {
+                    showToast('Failed to update message', 'error');
+                }
+            } else {
+                showToast('Configure sheetURL first', 'error');
+            }
+        }
+
+        // TOGGLE REPLIED
+        async function toggleReplied(id) {
+            var contact = allContacts.find(function (c) { return c.id === id; });
+            if (!contact) return;
+
+            var newValue = !contact.replied;
+
+            if (SHEET_URL) {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'contacts', action: 'update', contact: { id: id, replied: newValue, read: true } })
+                    });
+                    contact.replied = newValue;
+                    if (newValue) contact.read = true;
+                    showToast(newValue ? 'Marked as replied' : 'Removed replied status', 'success');
+                    renderContactsList();
+                    updateUnreadBadge();
+                } catch (err) {
+                    showToast('Failed to update message', 'error');
+                }
+            } else {
+                showToast('Configure sheetURL first', 'error');
+            }
+        }
+
+        // DELETE CONTACT
+        async function deleteContact(id) {
+            if (!confirm('Delete this message? This cannot be undone.')) return;
+
+            if (SHEET_URL) {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'contacts', action: 'delete', contact: { id: id } })
+                    });
+                    showToast('Message deleted', 'success');
+                    setTimeout(loadContacts, 1500);
+                } catch (err) {
+                    showToast('Failed to delete message', 'error');
+                }
+            } else {
+                showToast('Configure sheetURL first', 'error');
+            }
+        }
+
+        // LOGOUT
+        function logout() {
+            if (logoutTimer) clearTimeout(logoutTimer);
+            sessionStorage.removeItem('admin_auth');
+            sessionStorage.removeItem('admin_auth_time');
+            document.getElementById('adminContent').classList.add('hidden');
+            document.getElementById('authGate').classList.remove('hidden');
+            document.getElementById('authPassword').value = '';
+            document.getElementById('authPassword').focus();
+        }
+
+        // ==========================================
+        // START — init() is called after password authentication
+        // ==========================================
+    </script>
+</body>
+</html>

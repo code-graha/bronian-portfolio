@@ -1,0 +1,106 @@
+{
+  "siteTitle": "Bronian | Freelance Graphic Designer",
+  "sheetURL": "https://script.google.com/macros/s/AKfycbxHMumKiA4G5r2kM4S6NHiyYUwj2ys_L5kQHUgUv4Zqi6N317_ZOCeqo9pjnVlbHyZpEg/exec",
+  "personal": {
+    "name": "Mohit",
+    "brandName": "Bronian.",
+    "logoAlphabet": "B",
+    "title": "Graphic Designer & Visual Thinker",
+    "subtitle": "Branding | Print | Illustration | Video Editing",
+    "location": "India",
+    "email": "mahoitdhondial@gmail.com",
+    "phone": "+91 95993 31490",
+    "availableForWork": true,
+    "availabilityText": "Available for Freelance Work",
+    "heroHeadline": ["GRAPHIC", "DESIGNER", "& VISUAL", "THINKER"],
+    "heroDescription": "I craft bold brand identities, striking visuals, and digital experiences that cut through the noise. Let's make something that demands attention.",
+    "//socialLinks": [
+      { "name": "Instagram", "url": "https://instagram.com/mohitdesign", "icon": "fa-brands fa-instagram" },
+      { "name": "Behance", "url": "https://behance.net/mohitdesign", "icon": "fa-brands fa-behance" },
+      { "name": "Dribbble", "url": "https://dribbble.com/mohitdesign", "icon": "fa-brands fa-dribbble" },
+      { "name": "LinkedIn", "url": "https://linkedin.com/in/mohitdesign", "icon": "fa-brands fa-linkedin-in" }
+    ]
+  },
+  "marqueeItems": [
+    "Branding", "Logo Design", "Video Editing", "Typography",
+    "Illustration", "Print Design", "Packaging", "Motion Graphics"
+  ],
+  "//stats": [
+    { "value": "70+", "label": "Projects Done", "color": "brand-orange" },
+    { "value": "50+", "label": "Happy Clients", "color": "white" },
+    { "value": "5+", "label": "Years Experience", "color": "brand-orange" },
+    { "value": "4.9", "label": "Avg. Rating", "color": "white" }
+  ],
+  "projects": [],
+  "about": {
+    "tagline": "/// About Me",
+    "headline": ["I Design", "Bold", "Things."],
+    "description": "I'm Mohit \u2014 a freelance graphic designer who believes design should provoke, not just please. I specialize in brand identities, digital experiences, and visual systems that refuse to be ignored.",
+    "image": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    "highlights": [
+      { "icon": "fa-solid fa-pen-ruler", "title": "Pixel Perfect", "text": "Every detail obsessed over. Every pixel placed with intent." },
+      { "icon": "fa-solid fa-bolt", "title": "Fast Turnaround", "text": "Quick iterations without cutting corners. Your deadline is my deadline." },
+      { "icon": "fa-solid fa-handshake", "title": "Direct Communication", "text": "No middlemen. You work with me directly from brief to delivery." }
+    ]
+  },
+  "services": [
+    {
+      "icon": "fa-solid fa-wand-magic-sparkles",
+      "title": "Brand Identity",
+      "description": "Logo design, color systems, typography selection, brand guidelines, and full visual identity packages that tell your story.",
+      "price": "\u20b95,000"
+    },
+    {
+      "icon": "fa-solid fa-film",
+      "title": "Video Editing",
+      "description": "Professional video editing including cuts, transitions, color grading, sound design, and motion graphics. Polished and ready for publishing.",
+      "price": "\u20b98,000"
+    },
+    {
+      "icon": "fa-solid fa-newspaper",
+      "title": "Print & Packaging",
+      "description": "Posters, business cards, brochures, product packaging, and editorial layouts for physical media.",
+      "price": "\u20b95,000"
+    },
+    {
+      "icon": "fa-solid fa-palette",
+      "title": "Illustration",
+      "description": "Custom digital illustrations, icon sets, and visual assets for campaigns, products, and editorial use.",
+      "price": "\u20b95,000"
+    }
+  ],
+  "process": [
+    { "step": "01", "title": "Discovery", "text": "We talk about your brand, goals, audience, and vision. I ask the hard questions upfront." },
+    { "step": "02", "title": "Concept", "text": "I explore multiple directions and present 2-3 strong concepts with mood boards and rationale." },
+    { "step": "03", "title": "Refine", "text": "We iterate on the chosen direction. Two rounds of revisions are included in every project." },
+    { "step": "04", "title": "Deliver", "text": "You receive production-ready files in all formats you need, plus a style guide for consistency." }
+  ],
+  "contact": {
+    "headline": ["Let's", "Work", "Together"],
+    "description": "Got a project in mind? I'm currently taking on new clients. Let's create something that breaks the mold.",
+    "serviceOptions": [
+      { "value": "", "label": "SELECT A SERVICE" },
+      { "value": "branding", "label": "Brand Identity" },
+      { "value": "video", "label": "Video Editing" },
+      { "value": "print", "label": "Print & Packaging" },
+      { "value": "illustration", "label": "Illustration" },
+      { "value": "other", "label": "Other" }
+    ]
+  },
+  "footer": {
+    "tagline": "Freelance graphic designer crafting bold brand identities and digital experiences. Based in India, working globally.",
+    "navigate": [
+      { "label": "Work", "href": "#work" },
+      { "label": "Services", "href": "#services" },
+      { "label": "About", "href": "#about" },
+      { "label": "Contact", "href": "#contact" }
+    ],
+    "serviceLinks": [
+      { "label": "Brand Identity", "href": "#services" },
+      { "label": "Video Editing", "href": "#services" },
+      { "label": "Print Design", "href": "#services" },
+      { "label": "Illustration", "href": "#services" }
+    ],
+    "bottomText": "Crafted with intent by <a href='https://siddharthmhjn.com' target='_blank'>siddharthmhjn.com</a>"
+  }
+}

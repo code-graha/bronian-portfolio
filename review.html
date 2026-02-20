@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leave a Review | Bronian</title>
+    <meta name="description" content="Share your experience working with Bronian. Your feedback helps us grow.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=space-grotesk@400,500,600,700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-black': '#0a0a0a',
+                        'brand-dark': '#111111',
+                        'brand-orange': '#FF4500',
+                        'brand-gray': '#222222',
+                        'brand-light-gray': '#a3a3a3',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Space Grotesk', monospace; cursor: crosshair; }
+        h1, h2, h3, label { font-family: 'Clash Display', sans-serif; text-transform: uppercase; }
+
+        .bg-noise {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        input, select, textarea {
+            background: #111 !important;
+            border: 1px solid #333;
+            color: #f0f0f0;
+            font-family: 'Space Grotesk', monospace;
+            transition: border-color 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #FF4500;
+            outline: none;
+        }
+
+        .brutalist-card {
+            border: 1px solid #222;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .brutalist-card:hover {
+            border-color: #FF4500;
+        }
+
+        .toast {
+            animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .star-btn { transition: all 0.15s ease; }
+        .star-btn:hover i, .star-btn.active i { color: #FF4500; transform: scale(1.2); }
+        .star-btn i { transition: all 0.15s ease; }
+
+        .img-preview {
+            max-height: 120px;
+            object-fit: cover;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body class="bg-brand-black text-[#f0f0f0] min-h-screen">
+    <!-- Noise Overlay -->
+    <div class="fixed inset-0 bg-noise z-0"></div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-6 right-6 z-50 flex flex-col gap-3"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-brand-black/90 backdrop-blur-md border-b border-brand-gray">
+        <div class="max-w-[1440px] mx-auto px-6 h-20 flex justify-between items-center">
+            <a href="/" class="flex items-center gap-4 group cursor-pointer">
+                <div class="w-10 h-10 bg-brand-orange transform -rotate-12 group-hover:rotate-0 transition-transform duration-300 flex items-center justify-center border border-white">
+                    <span class="text-black font-bold text-xl">B</span>
+                </div>
+                <span class="font-display font-bold text-2xl tracking-tighter uppercase text-white">Bronian<span class="text-brand-orange">.</span></span>
+            </a>
+            <div class="hidden md:flex items-center gap-1">
+                <a href="/#work" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Work</a>
+                <a href="/#services" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Services</a>
+                <a href="/#about" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">About</a>
+                <a href="/#testimonials" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Reviews</a>
+            </div>
+            <a href="/#contact" class="hidden md:block border border-white px-6 py-2 text-sm uppercase font-bold hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300">
+                Hire Me
+            </a>
+        </div>
+    </nav>
+
+    <main class="relative z-10 max-w-3xl mx-auto px-6 py-12 pt-32">
+
+        <!-- Review Form -->
+        <div id="formSection">
+            <div class="brutalist-card bg-brand-dark p-8 md:p-10">
+                <div class="mb-8 pb-4 border-b border-brand-gray">
+                    <span class="text-brand-orange text-xs font-bold uppercase tracking-widest">/// Share Your Experience</span>
+                </div>
+
+                <form id="reviewForm" class="space-y-6">
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Your Name *</label>
+                        <input type="text" name="name" required placeholder="e.g. John Doe" class="w-full px-4 py-3 text-sm">
+                        <p class="field-error hidden text-red-500 text-[10px] mt-1 uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Name is required</p>
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Your Email *</label>
+                        <input type="email" name="email" required placeholder="e.g. john@example.com" class="w-full px-4 py-3 text-sm">
+                        <p class="field-error hidden text-red-500 text-[10px] mt-1 uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Valid email is required</p>
+                        <p class="text-brand-gray text-[10px] mt-1 uppercase tracking-wider">One review per email address</p>
+                    </div>
+
+                    <!-- Role / Company -->
+                    <div>
+                        <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Role & Company *</label>
+                        <input type="text" name="role" required placeholder="e.g. CEO, Acme Corp" class="w-full px-4 py-3 text-sm">
+                        <p class="field-error hidden text-red-500 text-[10px] mt-1 uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Role is required</p>
+                    </div>
+
+                    <!-- Rating -->
+                    <div>
+                        <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Rating *</label>
+                        <div id="starRating" class="flex gap-2">
+                            <button type="button" class="star-btn" data-rating="1"><i class="fa-solid fa-star text-2xl text-brand-gray"></i></button>
+                            <button type="button" class="star-btn" data-rating="2"><i class="fa-solid fa-star text-2xl text-brand-gray"></i></button>
+                            <button type="button" class="star-btn" data-rating="3"><i class="fa-solid fa-star text-2xl text-brand-gray"></i></button>
+                            <button type="button" class="star-btn" data-rating="4"><i class="fa-solid fa-star text-2xl text-brand-gray"></i></button>
+                            <button type="button" class="star-btn" data-rating="5"><i class="fa-solid fa-star text-2xl text-brand-gray"></i></button>
+                        </div>
+                        <input type="hidden" name="rating" value="">
+                        <p class="field-error hidden text-red-500 text-[10px] mt-1 uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Please select a rating</p>
+                    </div>
+
+                    <!-- Review Text -->
+                    <div>
+                        <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Your Review *</label>
+                        <textarea name="quote" required rows="4" placeholder="Tell us about your experience working together..." class="w-full px-4 py-3 text-sm resize-none"></textarea>
+                        <p class="field-error hidden text-red-500 text-[10px] mt-1 uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Review must be at least 20 characters</p>
+                        <p class="text-brand-gray text-[10px] mt-1 uppercase tracking-wider">Min 20 characters</p>
+                    </div>
+
+                    <!-- Photo Upload -->
+                    <div>
+                        <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Your Photo *</label>
+                        <label id="uploadLabel" class="flex items-center justify-center gap-3 w-full px-4 py-6 border border-dashed border-brand-gray hover:border-brand-orange cursor-pointer transition-colors bg-brand-dark">
+                            <i class="fa-solid fa-cloud-arrow-up text-brand-light-gray text-lg"></i>
+                            <span class="text-brand-light-gray text-xs uppercase tracking-widest">Click to upload photo</span>
+                            <input type="file" id="imageInput" accept="image/*" class="hidden">
+                        </label>
+                        <p class="field-error hidden text-red-500 text-[10px] mt-1 uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Photo is required</p>
+                        <p class="text-brand-gray text-[10px] mt-1 uppercase tracking-wider">Max 2MB · JPG, PNG, WebP</p>
+                        <div id="imagePreview" class="mt-3 hidden flex items-center gap-3">
+                            <img src="" alt="Preview" class="w-16 h-16 rounded-full object-cover border border-brand-gray">
+                            <button type="button" id="removeImage" class="text-xs text-red-500 uppercase tracking-widest hover:underline">
+                                <i class="fa-solid fa-xmark mr-1"></i>Remove
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" id="submitBtn" class="w-full bg-brand-orange text-black font-bold py-4 uppercase tracking-widest text-sm hover:bg-white transition-colors">
+                        <span class="btn-text"><i class="fa-solid fa-paper-plane mr-2"></i>Submit Review</span>
+                        <span class="btn-loading hidden"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Submitting...</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Success State -->
+        <div id="successState" class="hidden">
+            <div class="brutalist-card bg-brand-dark p-12 text-center">
+                <div class="w-20 h-20 bg-brand-orange flex items-center justify-center mx-auto mb-6" style="clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);">
+                    <i class="fa-solid fa-check text-black text-3xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold tracking-wider mb-3" style="font-family: 'Clash Display', sans-serif; text-transform: uppercase;">Thank You!</h2>
+                <p class="text-brand-light-gray text-sm mb-8">Your review has been submitted successfully. It will appear on the site after approval.</p>
+                <a href="/" class="inline-block bg-brand-orange text-black font-bold px-8 py-4 uppercase tracking-widest text-sm hover:bg-white transition-colors">
+                    <i class="fa-solid fa-arrow-left mr-2"></i>Back to Portfolio
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 bg-brand-black border-t border-brand-gray pt-12 pb-8 mt-12">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start mb-12 gap-10">
+                <div class="max-w-xs">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="w-8 h-8 bg-brand-orange flex items-center justify-center border border-white">
+                            <span class="text-black font-bold text-lg">B</span>
+                        </div>
+                        <span class="font-display font-bold text-xl tracking-tighter uppercase text-white">Bronian<span class="text-brand-orange">.</span></span>
+                    </div>
+                    <p class="text-brand-light-gray text-sm">Freelance graphic designer crafting bold brand identities and digital experiences. Based in India, working globally.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-12">
+                    <div>
+                        <h4 class="text-white font-bold uppercase mb-4 text-sm tracking-widest">Navigate</h4>
+                        <ul class="space-y-3 text-sm text-brand-light-gray">
+                            <li><a href="/#work" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Work</a></li>
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Services</a></li>
+                            <li><a href="/#about" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">About</a></li>
+                            <li><a href="/#contact" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold uppercase mb-4 text-sm tracking-widest">Services</h4>
+                        <ul class="space-y-3 text-sm text-brand-light-gray">
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Brand Identity</a></li>
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Video Editing</a></li>
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Print Design</a></li>
+                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Illustration</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-brand-gray pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-xs text-brand-light-gray uppercase">&copy; <script>document.write(new Date().getFullYear())</script> Bronian. All rights reserved.</p>
+                <p class="text-[10px] text-brand-light-gray uppercase tracking-widest">Crafted with intent by <a href="https://siddharthmhjn.com" target="_blank" class="text-brand-orange hover:underline transition-colors">siddharthmhjn.com</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        var SHEET_URL = '';
+        var selectedRating = 0;
+
+        // ==========================================
+        // INIT — load config
+        // ==========================================
+        async function init() {
+            try {
+                var res = await fetch('portfolio-data.json');
+                if (res.ok) {
+                    var config = await res.json();
+                    SHEET_URL = config.sheetURL || '';
+                }
+            } catch (e) {
+                console.log('Could not load config:', e);
+            }
+        }
+
+        // ==========================================
+        // STAR RATING
+        // ==========================================
+        var starBtns = document.querySelectorAll('.star-btn');
+        starBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                selectedRating = parseInt(btn.getAttribute('data-rating'));
+                document.querySelector('[name="rating"]').value = selectedRating;
+
+                starBtns.forEach(function (b) {
+                    var r = parseInt(b.getAttribute('data-rating'));
+                    if (r <= selectedRating) {
+                        b.classList.add('active');
+                        b.querySelector('i').classList.remove('text-brand-gray');
+                        b.querySelector('i').classList.add('text-brand-orange');
+                    } else {
+                        b.classList.remove('active');
+                        b.querySelector('i').classList.add('text-brand-gray');
+                        b.querySelector('i').classList.remove('text-brand-orange');
+                    }
+                });
+            });
+        });
+
+        // ==========================================
+        // IMAGE UPLOAD & RESIZE
+        // ==========================================
+        var imageHex = ''; // Stores resized image as hex string
+        var imagePreviewSrc = ''; // For preview display
+
+        document.getElementById('imageInput').addEventListener('change', function () {
+            var file = this.files[0];
+            if (!file) return;
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file', 'error');
+                this.value = '';
+                return;
+            }
+
+            // Validate file size (2MB max)
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('Image must be under 2MB', 'error');
+                this.value = '';
+                return;
+            }
+
+            resizeImage(file, 200, function (hex, previewDataURL) {
+                imageHex = hex;
+                imagePreviewSrc = previewDataURL;
+                var previewContainer = document.getElementById('imagePreview');
+                var img = previewContainer.querySelector('img');
+                img.src = previewDataURL;
+                previewContainer.classList.remove('hidden');
+                // Clear photo error if visible
+                document.getElementById('uploadLabel').style.borderColor = '';
+                var photoErr = document.getElementById('uploadLabel').parentElement.querySelector('.field-error');
+                if (photoErr) photoErr.classList.add('hidden');
+                // Update upload label
+                document.querySelector('#uploadLabel span').textContent = file.name;
+            });
+        });
+
+        // Remove image
+        document.getElementById('removeImage').addEventListener('click', function () {
+            imageHex = '';
+            imagePreviewSrc = '';
+            document.getElementById('imageInput').value = '';
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.querySelector('#uploadLabel span').textContent = 'Click to upload photo';
+        });
+
+        // Resize image to max dimension and return hex string
+        function resizeImage(file, maxSize, callback) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var img = new Image();
+                img.onload = function () {
+                    var canvas = document.createElement('canvas');
+                    var w = img.width;
+                    var h = img.height;
+
+                    // Scale down if larger than maxSize
+                    if (w > maxSize || h > maxSize) {
+                        if (w > h) {
+                            h = Math.round(h * maxSize / w);
+                            w = maxSize;
+                        } else {
+                            w = Math.round(w * maxSize / h);
+                            h = maxSize;
+                        }
+                    }
+
+                    canvas.width = w;
+                    canvas.height = h;
+                    var ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+
+                    // Convert canvas to blob, then to hex
+                    canvas.toBlob(function (blob) {
+                        var blobReader = new FileReader();
+                        blobReader.onload = function () {
+                            var bytes = new Uint8Array(blobReader.result);
+                            var hex = '';
+                            for (var i = 0; i < bytes.length; i++) {
+                                hex += bytes[i].toString(16).padStart(2, '0');
+                            }
+                            // Also generate preview data URL
+                            var previewDataURL = canvas.toDataURL('image/jpeg', 0.8);
+                            callback(hex, previewDataURL);
+                        };
+                        blobReader.readAsArrayBuffer(blob);
+                    }, 'image/jpeg', 0.8);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ==========================================
+        // FORM SUBMIT
+        // ==========================================
+        document.getElementById('reviewForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            var form = this;
+            var submitBtn = document.getElementById('submitBtn');
+            var btnText = submitBtn.querySelector('.btn-text');
+            var btnLoading = submitBtn.querySelector('.btn-loading');
+
+            // Clear previous errors
+            form.querySelectorAll('.field-error').forEach(function (el) { el.classList.add('hidden'); });
+            form.querySelectorAll('input, textarea').forEach(function (el) { el.style.borderColor = ''; });
+            document.getElementById('uploadLabel').style.borderColor = '';
+
+            var name = form.querySelector('[name="name"]').value.trim();
+            var email = form.querySelector('[name="email"]').value.trim();
+            var role = form.querySelector('[name="role"]').value.trim();
+            var rating = selectedRating;
+            var quote = form.querySelector('[name="quote"]').value.trim();
+
+            // Validate each field with inline errors
+            var hasError = false;
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!name) {
+                var el = form.querySelector('[name="name"]');
+                el.style.borderColor = '#ef4444';
+                el.parentElement.querySelector('.field-error').classList.remove('hidden');
+                hasError = true;
+            }
+            if (!email || !emailRegex.test(email)) {
+                var el = form.querySelector('[name="email"]');
+                el.style.borderColor = '#ef4444';
+                el.parentElement.querySelector('.field-error').classList.remove('hidden');
+                hasError = true;
+            }
+            if (!role) {
+                var el = form.querySelector('[name="role"]');
+                el.style.borderColor = '#ef4444';
+                el.parentElement.querySelector('.field-error').classList.remove('hidden');
+                hasError = true;
+            }
+            if (rating === 0) {
+                document.getElementById('starRating').parentElement.querySelector('.field-error').classList.remove('hidden');
+                hasError = true;
+            }
+            if (!quote || quote.length < 20) {
+                var el = form.querySelector('[name="quote"]');
+                el.style.borderColor = '#ef4444';
+                el.parentElement.querySelector('.field-error').classList.remove('hidden');
+                hasError = true;
+            }
+            if (!imageHex) {
+                document.getElementById('uploadLabel').style.borderColor = '#ef4444';
+                document.getElementById('uploadLabel').parentElement.querySelector('.field-error').classList.remove('hidden');
+                hasError = true;
+            }
+            if (hasError) {
+                showToast('Please fix the errors below', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            btnText.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+
+            // Check for duplicate email before submitting
+            if (SHEET_URL && SHEET_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                try {
+                    var checkRes = await fetch(SHEET_URL + '?type=reviews&mode=all');
+                    if (checkRes.ok) {
+                        var checkData = await checkRes.json();
+                        if (checkData.reviews && checkData.reviews.some(function (r) {
+                            return r.email && r.email.toLowerCase() === email.toLowerCase();
+                        })) {
+                            var emailEl = form.querySelector('[name="email"]');
+                            emailEl.style.borderColor = '#ef4444';
+                            emailEl.parentElement.querySelector('.field-error').textContent = '';
+                            emailEl.parentElement.querySelector('.field-error').innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-1"></i>A review from this email already exists';
+                            emailEl.parentElement.querySelector('.field-error').classList.remove('hidden');
+                            showToast('A review with this email already exists', 'error');
+                            submitBtn.disabled = false;
+                            btnText.classList.remove('hidden');
+                            btnLoading.classList.add('hidden');
+                            return;
+                        }
+                    }
+                } catch (e) { /* proceed with submission if check fails */ }
+            }
+
+            var review = {
+                id: 'review_' + Date.now(),
+                name: name,
+                email: email,
+                role: role,
+                rating: rating,
+                quote: quote,
+                imageData: imageHex || '',
+                featured: false,
+                approved: false,
+                timestamp: new Date().toISOString()
+            };
+
+            if (SHEET_URL && SHEET_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                try {
+                    await fetch(SHEET_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'reviews', action: 'add', review: review })
+                    });
+                    document.getElementById('formSection').classList.add('hidden');
+                    document.getElementById('successState').classList.remove('hidden');
+                } catch (err) {
+                    console.error('Submit error:', err);
+                    showToast('Failed to submit review. Please try again.', 'error');
+                }
+            } else {
+                document.getElementById('formSection').classList.add('hidden');
+                document.getElementById('successState').classList.remove('hidden');
+            }
+
+            submitBtn.disabled = false;
+            btnText.classList.remove('hidden');
+            btnLoading.classList.add('hidden');
+        });
+
+        // ==========================================
+        // TOAST NOTIFICATIONS
+        // ==========================================
+        function showToast(message, type) {
+            var container = document.getElementById('toastContainer');
+            var bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-brand-orange';
+            var icon = type === 'success' ? 'fa-check' : type === 'error' ? 'fa-xmark' : 'fa-info';
+
+            var toast = document.createElement('div');
+            toast.className = 'toast flex items-center gap-3 px-5 py-3 text-sm font-bold uppercase tracking-wider text-white ' + bgColor;
+            toast.innerHTML = '<i class="fa-solid ' + icon + '"></i>' + message;
+            container.appendChild(toast);
+
+            setTimeout(function () { toast.remove(); }, 3000);
+        }
+
+        // ==========================================
+        // START
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

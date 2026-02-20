@@ -1,0 +1,302 @@
+/* ========================================
+   BASE STYLES
+   ======================================== */
+::-webkit-scrollbar { display: none; }
+* { scroll-behavior: smooth; }
+
+body {
+    background-color: #0a0a0a;
+    color: #f0f0f0;
+    font-family: 'Space Grotesk', monospace;
+    overflow-x: hidden;
+    cursor: crosshair;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Clash Display', sans-serif;
+    text-transform: uppercase;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ========================================
+   BRUTALIST CARD SYSTEM
+   ======================================== */
+.brutalist-card {
+    border: 1px solid #222;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.brutalist-card:hover {
+    border-color: #FF4500;
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0px #FF4500;
+}
+
+/* ========================================
+   MASONRY GRID
+   ======================================== */
+.masonry-grid {
+    column-count: 1;
+    column-gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .masonry-grid { column-count: 2; }
+}
+
+@media (min-width: 1024px) {
+    .masonry-grid { column-count: 3; }
+}
+
+@media (min-width: 1280px) {
+    .masonry-grid { column-count: 4; }
+}
+
+.break-inside-avoid { break-inside: avoid; }
+
+/* ========================================
+   TEXT EFFECTS
+   ======================================== */
+.text-outline {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
+    color: transparent;
+}
+
+/* ========================================
+   NOISE OVERLAY
+   ======================================== */
+.bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+/* ========================================
+   CLIP PATHS
+   ======================================== */
+.clip-angle {
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%);
+}
+
+.clip-tag {
+    clip-path: polygon(10% 0, 100% 0, 100% 100%, 0 100%, 0 25%);
+}
+
+/* ========================================
+   PROJECT HOVER OVERLAY
+   ======================================== */
+.project-overlay {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.group:hover .project-overlay {
+    opacity: 1;
+}
+
+/* ========================================
+   MOBILE MENU
+   ======================================== */
+.mobile-menu {
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.mobile-menu.open {
+    transform: translateX(0);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* ========================================
+   LOADING SCREEN
+   ======================================== */
+#loadingScreen {
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#loadingScreen.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loading-logo {
+    animation: logoPulse 2s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+    0%, 100% { transform: rotate(-12deg) scale(1); box-shadow: 0 0 0 0 rgba(255, 69, 0, 0.4); }
+    50% { transform: rotate(-12deg) scale(1.1); box-shadow: 0 0 24px 6px rgba(255, 69, 0, 0.2); }
+}
+
+.loading-brand {
+    animation: brandSlideUp 0.6s ease forwards;
+}
+
+@keyframes brandSlideUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.loading-bar {
+    animation: barSlide 1.5s ease-in-out infinite;
+}
+
+@keyframes barSlide {
+    0% { transform: translateX(-100%); width: 40%; }
+    50% { transform: translateX(60%); width: 60%; }
+    100% { transform: translateX(200%); width: 40%; }
+}
+
+/* ========================================
+   FORM ELEMENTS
+   ======================================== */
+.form-input {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    ring: 4px solid white;
+}
+
+select option {
+    background-color: #0a0a0a;
+    color: #f0f0f0;
+}
+
+/* ========================================
+   SERVICE CARD HOVER
+   ======================================== */
+.service-icon {
+    transition: all 0.3s ease;
+}
+
+.group:hover .service-icon {
+    background-color: #FF4500;
+    color: #000;
+}
+
+/* ========================================
+   PROCESS STEP NUMBERS
+   ======================================== */
+.process-number {
+    transition: color 0.3s ease;
+}
+
+.group:hover .process-number {
+    color: rgba(255, 69, 0, 0.3);
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE (max-width: 640px)
+   ======================================== */
+@media (max-width: 640px) {
+    #hero {
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh;
+    }
+
+    #hero h1 {
+        font-size: 3rem;
+        line-height: 0.9;
+    }
+
+    section {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .masonry-grid {
+        column-count: 1;
+    }
+}
+
+/* ========================================
+   RESPONSIVE - TABLET (641px - 1024px)
+   ======================================== */
+@media (min-width: 641px) and (max-width: 1024px) {
+    #hero h1 {
+        font-size: 5rem;
+    }
+
+    .masonry-grid {
+        column-count: 2;
+    }
+}
+
+/* ========================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ======================================== */
+@media (hover: none) {
+    .brutalist-card:hover {
+        transform: none;
+        box-shadow: none;
+        border-color: #222;
+    }
+
+    button, a {
+        min-height: 44px;
+    }
+}
+
+/* ========================================
+   TOAST NOTIFICATION
+   ======================================== */
+.toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.75rem 1.5rem;
+    background: #111;
+    border: 1px solid #FF4500;
+    color: #FF4500;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.1em;
+    z-index: 100;
+    transition: opacity 0.3s ease;
+}
+
+/* ========================================
+   LOADING SKELETON
+   ======================================== */
+.skeleton {
+    background: linear-gradient(90deg,
+        #111 25%,
+        #222 50%,
+        #111 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 0.25rem;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ========================================
+   PREFERS REDUCED MOTION
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
