@@ -1,4 +1,24 @@
 /* ========================================
+   ICON SPRITE (replaces Font Awesome CDN — see assets/icons/sprite.svg)
+   ======================================== */
+.icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    vertical-align: -0.125em;
+}
+
+.icon-spin {
+    animation: icon-spin 1s linear infinite;
+}
+
+@keyframes icon-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* ========================================
    BASE STYLES
    ======================================== */
 ::-webkit-scrollbar { display: none; }

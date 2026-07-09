@@ -14,7 +14,7 @@
     "availabilityText": "Available for Freelance Work",
     "heroHeadline": ["GRAPHIC", "DESIGNER", "& VISUAL", "THINKER"],
     "heroDescription": "I craft bold brand identities, striking visuals, and digital experiences that cut through the noise. Let's make something that demands attention.",
-    "//socialLinks": [
+    "socialLinks": [
       { "name": "Instagram", "url": "https://instagram.com/mohitdesign", "icon": "fa-brands fa-instagram" },
       { "name": "Behance", "url": "https://behance.net/mohitdesign", "icon": "fa-brands fa-behance" },
       { "name": "Dribbble", "url": "https://dribbble.com/mohitdesign", "icon": "fa-brands fa-dribbble" },
@@ -25,7 +25,7 @@
     "Branding", "Logo Design", "Video Editing", "Typography",
     "Illustration", "Print Design", "Packaging", "Motion Graphics"
   ],
-  "//stats": [
+  "stats": [
     { "value": "70+", "label": "Projects Done", "color": "brand-orange" },
     { "value": "50+", "label": "Happy Clients", "color": "white" },
     { "value": "5+", "label": "Years Experience", "color": "brand-orange" },
@@ -88,19 +88,7 @@
     ]
   },
   "footer": {
-    "tagline": "Freelance graphic designer crafting bold brand identities and digital experiences. Based in India, working globally.",
-    "navigate": [
-      { "label": "Work", "href": "#work" },
-      { "label": "Services", "href": "#services" },
-      { "label": "About", "href": "#about" },
-      { "label": "Contact", "href": "#contact" }
-    ],
-    "serviceLinks": [
-      { "label": "Brand Identity", "href": "#services" },
-      { "label": "Video Editing", "href": "#services" },
-      { "label": "Print Design", "href": "#services" },
-      { "label": "Illustration", "href": "#services" }
-    ],
-    "bottomText": "Crafted with intent by <a href='https://siddharthmhjn.com' target='_blank'>siddharthmhjn.com</a>"
+    "tagline": "Freelance graphic designer crafting bold brand identities and digital experiences.",
+    "bottomText": "Crafted and Managed by <a href='https://webgraha.com' target='_blank' rel='noopener noreferrer'>WebGraha</a>"
   }
 }
