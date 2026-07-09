@@ -62,7 +62,7 @@
     <!-- Early Sheets fetch — starts before script.js loads -->
     <script>
         (function () {
-            var url = 'https://script.google.com/macros/s/AKfycbxHMumKiA4G5r2kM4S6NHiyYUwj2ys_L5kQHUgUv4Zqi6N317_ZOCeqo9pjnVlbHyZpEg/exec';
+            var url = 'https://script.google.com/macros/s/AKfycbzuWp_8_TJI0aeua5dHakl7viTcDyV5XafAx8kl4i3nbd3pNC3zrznmnXAGlmMJLg3asg/exec';
             var cb = '&_t=' + Date.now();
             window.__earlyProjects = fetch(url + '?type=projects' + cb).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
             window.__earlyReviews = fetch(url + '?type=reviews' + cb).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
