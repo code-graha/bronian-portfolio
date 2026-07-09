@@ -10,21 +10,34 @@
     <meta name="keywords" content="Bronian, Mohit, graphic designer, freelance, branding, logo design, video editing, print design, illustration, typography, packaging, motion graphics, India">
     <meta name="author" content="Bronian">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://bronian.work.gd/">
+    <link rel="canonical" href="https://bronian.webgraha.com/">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/brand/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/brand/favicon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/brand/favicon-512.png">
+    <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
+    <link rel="mask-icon" href="/assets/brand/favicon.svg" color="#FF4500">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://bronian.work.gd/">
+    <meta property="og:url" content="https://bronian.webgraha.com/">
     <meta property="og:title" content="Bronian | Freelance Graphic Designer">
     <meta property="og:description" content="Freelance Graphic Designer specializing in branding, print, illustration, and video editing. Bold visuals that cut through the noise.">
     <meta property="og:site_name" content="Bronian — Portfolio">
     <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="https://bronian.webgraha.com/assets/brand/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Bronian — Freelance Graphic Designer">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:url" content="https://bronian.work.gd/">
+    <meta name="twitter:url" content="https://bronian.webgraha.com/">
     <meta name="twitter:title" content="Bronian | Freelance Graphic Designer">
     <meta name="twitter:description" content="Freelance Graphic Designer specializing in branding, print, illustration, and video editing. Bold visuals that cut through the noise.">
+    <meta name="twitter:image" content="https://bronian.webgraha.com/assets/brand/og-image.png">
 
     <meta name="theme-color" content="#0a0a0a">
 
@@ -34,44 +47,112 @@
       {
         "@context": "https://schema.org",
         "@type": "Person",
+        "@id": "https://bronian.webgraha.com/#person",
         "name": "Mohit",
         "alternateName": "Bronian",
-        "url": "https://bronian.work.gd",
+        "url": "https://bronian.webgraha.com",
         "email": "mahoitdhondial@gmail.com",
         "telephone": "+919599331490",
         "jobTitle": "Freelance Graphic Designer",
         "description": "Freelance Graphic Designer specializing in branding, print, illustration, and video editing. Based in India, working globally.",
         "knowsAbout": ["Graphic Design", "Branding", "Logo Design", "Video Editing", "Print Design", "Illustration", "Typography", "Packaging", "Motion Graphics"],
-        "address": { "@type": "PostalAddress", "addressCountry": "IN" }
+        "address": { "@type": "PostalAddress", "addressCountry": "IN" },
+        "sameAs": [
+          "https://instagram.com/mohitdesign",
+          "https://behance.net/mohitdesign",
+          "https://dribbble.com/mohitdesign",
+          "https://linkedin.com/in/mohitdesign"
+        ],
+        "makesOffer": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Brand Identity",
+              "description": "Logo design, color systems, typography selection, brand guidelines, and full visual identity packages."
+            },
+            "priceCurrency": "INR",
+            "price": "5000",
+            "priceSpecification": { "@type": "PriceSpecification", "minPrice": "5000", "priceCurrency": "INR" }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Video Editing",
+              "description": "Professional video editing including cuts, transitions, color grading, sound design, and motion graphics."
+            },
+            "priceCurrency": "INR",
+            "price": "8000",
+            "priceSpecification": { "@type": "PriceSpecification", "minPrice": "8000", "priceCurrency": "INR" }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Print & Packaging",
+              "description": "Posters, business cards, brochures, product packaging, and editorial layouts for physical media."
+            },
+            "priceCurrency": "INR",
+            "price": "5000",
+            "priceSpecification": { "@type": "PriceSpecification", "minPrice": "5000", "priceCurrency": "INR" }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Illustration",
+              "description": "Custom digital illustrations, icon sets, and visual assets for campaigns, products, and editorial use."
+            },
+            "priceCurrency": "INR",
+            "price": "5000",
+            "priceSpecification": { "@type": "PriceSpecification", "minPrice": "5000", "priceCurrency": "INR" }
+          }
+        ]
       },
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
+        "@id": "https://bronian.webgraha.com/#website",
         "name": "Bronian — Freelance Graphic Designer Portfolio",
-        "url": "https://bronian.work.gd"
+        "url": "https://bronian.webgraha.com",
+        "about": { "@id": "https://bronian.webgraha.com/#person" }
       }
     ]
     </script>
 
     <!-- Preconnect -->
-    <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="https://script.google.com" crossorigin>
     <link rel="dns-prefetch" href="https://script.google.com">
 
-    <!-- Early Sheets fetch — starts before script.js loads -->
+    <!-- Early Sheets fetch — starts before script.js loads.
+         sheetURL lives only in portfolio-data.json (single source of truth);
+         this just fetches that file a little earlier than script.js would,
+         then chains the projects/reviews requests off of it. -->
     <script>
         (function () {
-            var url = 'https://script.google.com/macros/s/AKfycbxHMumKiA4G5r2kM4S6NHiyYUwj2ys_L5kQHUgUv4Zqi6N317_ZOCeqo9pjnVlbHyZpEg/exec';
-            var cb = '&_t=' + Date.now();
-            window.__earlyProjects = fetch(url + '?type=projects' + cb).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
-            window.__earlyReviews = fetch(url + '?type=reviews' + cb).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+            window.__earlyPortfolioData = fetch('portfolio-data.json')
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .catch(function () { return null; });
+
+            function earlyFetch(type) {
+                return window.__earlyPortfolioData.then(function (data) {
+                    var sheetURL = data && data.sheetURL;
+                    if (!sheetURL || sheetURL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') return null;
+                    var cb = '&_t=' + Date.now();
+                    return fetch(sheetURL + '?type=' + type + cb)
+                        .then(function (r) { return r.ok ? r.json() : null; })
+                        .catch(function () { return null; });
+                });
+            }
+
+            window.__earlyProjects = earlyFetch('projects');
+            window.__earlyReviews = earlyFetch('reviews');
         })();
     </script>
 
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,400,500,600,700&f[]=space-grotesk@300,400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/fonts/fonts.css">
     <link rel="stylesheet" href="styles.css">
 
     <!-- Scripts -->
@@ -116,8 +197,8 @@
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-1">
                 <a href="#work" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Work</a>
-                <a href="#services" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Services</a>
                 <a href="#about" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">About</a>
+                <a href="#services" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Services</a>
                 <a href="#testimonials" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Reviews</a>
             </div>
 
@@ -127,7 +208,7 @@
                     Hire Me
                 </a>
                 <button id="menuBtn" class="md:hidden text-white text-2xl w-12 h-12 flex items-center justify-center border border-brand-gray hover:border-brand-orange transition-colors" aria-label="Menu">
-                    <i class="fa-solid fa-bars-staggered"></i>
+                    <svg class="icon"><use href="/assets/icons/sprite.svg#bars-staggered"></use></svg>
                 </button>
             </div>
         </div>
@@ -138,13 +219,13 @@
         <div class="flex justify-between items-center p-6 border-b border-brand-gray">
             <span class="font-display font-bold text-xl uppercase">Menu</span>
             <button id="menuClose" class="w-10 h-10 border border-brand-gray flex items-center justify-center hover:border-brand-orange hover:text-brand-orange transition-colors">
-                <i class="fa-solid fa-xmark"></i>
+                <svg class="icon"><use href="/assets/icons/sprite.svg#xmark"></use></svg>
             </button>
         </div>
         <div class="flex flex-col p-6 gap-2">
             <a href="#work" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">Work</a>
-            <a href="#services" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">Services</a>
             <a href="#about" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">About</a>
+            <a href="#services" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">Services</a>
             <a href="#testimonials" class="mobile-link py-3 text-lg uppercase tracking-widest hover:text-brand-orange transition-colors border-b border-brand-gray">Reviews</a>
             <a href="#contact" class="mobile-link mt-6 py-3 bg-brand-orange text-black text-center uppercase font-bold tracking-widest hover:bg-white transition-colors">Hire Me</a>
         </div>
@@ -178,7 +259,7 @@
             <div class="flex flex-col sm:flex-row gap-6 w-full justify-center">
                 <a href="#work" class="relative group inline-block bg-brand-orange text-black font-bold text-lg px-10 py-4 uppercase tracking-wider clip-angle hover:bg-white transition-colors duration-300">
                     View My Work
-                    <i class="fa-solid fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"></i>
+                    <svg class="icon ml-2 transform group-hover:translate-x-1 transition-transform"><use href="/assets/icons/sprite.svg#arrow-right"></use></svg>
                 </a>
                 <a href="#contact" class="inline-block border border-brand-gray text-white font-bold text-lg px-10 py-4 uppercase tracking-wider hover:border-brand-orange hover:text-brand-orange transition-colors duration-300">
                     Get In Touch
@@ -251,13 +332,13 @@
                     </div>
 
                     <a href="#contact" class="inline-block bg-brand-orange text-black font-bold px-8 py-4 uppercase tracking-wider clip-angle hover:bg-white transition-colors duration-300">
-                        Let's Talk <i class="fa-solid fa-arrow-right ml-2"></i>
+                        Let's Talk <svg class="icon ml-2"><use href="/assets/icons/sprite.svg#arrow-right"></use></svg>
                     </a>
                 </div>
                 <!-- Image -->
                 <div class="lg:col-span-7 order-1 lg:order-2 relative">
-                    <div class="relative z-10 border-4 border-brand-black w-full">
-                        <img class="about-image w-full h-auto grayscale contrast-125 brightness-90" src="" alt="Mohit — Graphic Designer">
+                    <div class="relative z-10 border-4 border-brand-black w-full aspect-[4/5] overflow-hidden">
+                        <img class="about-image w-full h-full object-cover grayscale contrast-125 brightness-90" src="" alt="Mohit — Graphic Designer" loading="lazy" decoding="async" width="1000" height="1250">
                         <div class="absolute inset-0 border-[1px] border-brand-orange m-4 pointer-events-none"></div>
                     </div>
                     <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-brand-orange z-0 hidden md:block"></div>
@@ -334,10 +415,10 @@
                     <p class="contact-description text-xl font-bold mb-8 max-w-lg"></p>
                     <div class="flex flex-col gap-4 text-lg font-bold">
                         <a href="" class="contact-email flex items-center gap-3 hover:text-white transition-colors">
-                            <i class="fa-solid fa-envelope"></i> <span></span>
+                            <svg class="icon"><use href="/assets/icons/sprite.svg#envelope"></use></svg> <span></span>
                         </a>
                         <a href="" class="contact-phone flex items-center gap-3 hover:text-white transition-colors">
-                            <i class="fa-solid fa-phone"></i> <span></span>
+                            <svg class="icon"><use href="/assets/icons/sprite.svg#phone"></use></svg> <span></span>
                         </a>
                     </div>
                 </div>
@@ -346,32 +427,32 @@
                     <form id="contactForm" class="space-y-4">
                         <div>
                             <input type="text" name="name" placeholder="YOUR NAME" required class="w-full bg-black text-white px-6 py-4 uppercase font-bold placeholder-brand-light-gray focus:outline-none focus:ring-4 focus:ring-white border-none text-sm">
-                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Name is required</p>
+                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><svg class="icon mr-1"><use href="/assets/icons/sprite.svg#triangle-exclamation"></use></svg>Name is required</p>
                         </div>
                         <div>
                             <input type="email" name="email" placeholder="YOUR EMAIL" required class="w-full bg-black text-white px-6 py-4 uppercase font-bold placeholder-brand-light-gray focus:outline-none focus:ring-4 focus:ring-white border-none text-sm">
-                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Valid email is required</p>
+                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><svg class="icon mr-1"><use href="/assets/icons/sprite.svg#triangle-exclamation"></use></svg>Valid email is required</p>
                         </div>
                         <div>
                             <select name="service" required class="contact-service-select w-full bg-black text-brand-light-gray px-6 py-4 uppercase font-bold focus:outline-none focus:ring-4 focus:ring-white border-none text-sm appearance-none cursor-pointer">
                                 <!-- Populated by script.js -->
                             </select>
-                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Please select a service</p>
+                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><svg class="icon mr-1"><use href="/assets/icons/sprite.svg#triangle-exclamation"></use></svg>Please select a service</p>
                         </div>
                         <div>
                             <textarea name="message" placeholder="TELL ME ABOUT YOUR PROJECT" rows="4" class="w-full bg-black text-white px-6 py-4 uppercase font-bold placeholder-brand-light-gray focus:outline-none focus:ring-4 focus:ring-white border-none text-sm resize-none"></textarea>
-                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i>Message is required</p>
+                            <p class="field-error hidden text-red-500 text-[10px] uppercase tracking-widest mt-1 pl-1"><svg class="icon mr-1"><use href="/assets/icons/sprite.svg#triangle-exclamation"></use></svg>Message is required</p>
                         </div>
                         <button type="submit" class="w-full bg-black text-white py-5 font-bold uppercase tracking-widest text-lg hover:bg-white hover:text-black transition-colors">
-                            <span class="btn-text">Send Message <i class="fa-solid fa-paper-plane ml-2"></i></span>
-                            <span class="btn-loading hidden"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Sending...</span>
+                            <span class="btn-text">Send Message <svg class="icon ml-2"><use href="/assets/icons/sprite.svg#paper-plane"></use></svg></span>
+                            <span class="btn-loading hidden"><svg class="icon icon-spin mr-2"><use href="/assets/icons/sprite.svg#spinner"></use></svg>Sending...</span>
                         </button>
                     </form>
                     <div id="formSuccess" class="hidden mt-4 p-4 bg-green-600/20 border border-green-600 text-green-400 text-center font-bold uppercase text-sm">
-                        <i class="fa-solid fa-check-circle mr-2"></i>Message sent successfully! I'll get back to you soon.
+                        <svg class="icon mr-2"><use href="/assets/icons/sprite.svg#check-circle"></use></svg>Message sent successfully! I'll get back to you soon.
                     </div>
                     <div id="formError" class="hidden mt-4 p-4 bg-red-600/20 border border-red-600 text-red-400 text-center font-bold uppercase text-sm">
-                        <i class="fa-solid fa-exclamation-circle mr-2"></i>Failed to send message. Please try again or email directly.
+                        <svg class="icon mr-2"><use href="/assets/icons/sprite.svg#exclamation-circle"></use></svg>Failed to send message. Please try again or email directly.
                     </div>
                 </div>
             </div>
@@ -381,45 +462,28 @@
     </main>
 
     <!-- ========== FOOTER ========== -->
-    <footer id="footer" class="bg-brand-black border-t border-brand-gray pt-16 pb-8">
+    <footer id="footer" class="bg-brand-black border-t border-brand-gray py-10">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-start mb-16 gap-12">
-                <!-- Brand -->
-                <div class="max-w-xs">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-8 h-8 bg-brand-orange flex items-center justify-center border border-white">
-                            <span class="footer-logo-letter text-black font-bold text-lg"></span>
-                        </div>
-                        <span class="footer-brand-name font-display font-bold text-xl tracking-tighter uppercase text-white"></span>
+            <!-- Top row: brand / tagline / social -->
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 pb-6 border-b border-brand-gray">
+                <a href="#hero" class="flex items-center gap-3 shrink-0">
+                    <div class="w-8 h-8 bg-brand-orange flex items-center justify-center border border-white">
+                        <span class="footer-logo-letter text-black font-bold text-lg"></span>
                     </div>
-                    <p class="footer-tagline text-brand-light-gray text-sm"></p>
-                </div>
-                <!-- Links -->
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-12">
-                    <div>
-                        <h4 class="text-white font-bold uppercase mb-6 text-sm tracking-widest">Navigate</h4>
-                        <ul class="footer-nav-links space-y-3 text-sm text-brand-light-gray">
-                            <!-- Populated by script.js -->
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-bold uppercase mb-6 text-sm tracking-widest">Services</h4>
-                        <ul class="footer-service-links space-y-3 text-sm text-brand-light-gray">
-                            <!-- Populated by script.js -->
-                        </ul>
-                    </div>
-                    <div class="col-span-2 md:col-span-1">
-                        <h4 class="text-white font-bold uppercase mb-6 text-sm tracking-widest">Social</h4>
-                        <div class="footer-social-links flex gap-4">
-                            <!-- Populated by script.js -->
-                        </div>
-                    </div>
+                    <span class="footer-brand-name font-display font-bold text-xl tracking-tighter uppercase text-white"></span>
+                </a>
+
+                <p class="footer-tagline text-brand-light-gray text-sm text-center"></p>
+
+                <div class="footer-social-links flex items-center gap-3 text-base shrink-0">
+                    <!-- Populated by script.js -->
                 </div>
             </div>
-            <!-- Bottom -->
-            <div class="border-t border-brand-gray pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="footer-copyright text-xs text-brand-light-gray uppercase"></p>
-                <p class="footer-bottom-text text-[10px] text-brand-light-gray uppercase tracking-widest [&_a]:text-brand-orange [&_a]:hover:underline [&_a]:transition-colors"></p>
+
+            <!-- Bottom row: copyright / credit -->
+            <div class="pt-6 flex flex-col-reverse md:flex-row justify-between items-center gap-3 text-[10px] uppercase tracking-widest text-brand-light-gray">
+                <p class="footer-copyright"></p>
+                <p class="footer-bottom-text [&_a]:text-brand-orange [&_a]:hover:underline [&_a]:transition-colors"></p>
             </div>
         </div>
     </footer>

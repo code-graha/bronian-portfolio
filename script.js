@@ -56,7 +56,7 @@ const defaultPortfolioData = {
     process: [],
     testimonials: [],
     contact: { headline: [], description: "", serviceOptions: [] },
-    footer: { tagline: "", navigate: [], serviceLinks: [], bottomText: "" }
+    footer: { tagline: "", bottomText: "" }
 };
 
 let portfolioData = { ...defaultPortfolioData };
@@ -86,6 +86,24 @@ function hexToDataURL(hex) {
 }
 
 // ========================================
+// ICON HELPER
+// portfolio-data.json stores icons as "fa-solid fa-icon-name" strings (kept
+// for backwards compatibility); this pulls out the icon-name token and
+// renders it against the local sprite (assets/icons/sprite.svg) instead of
+// Font Awesome. Only icons already built into that sprite will render.
+// ========================================
+function iconHTML(iconClass, extraClass) {
+    var name = '';
+    (iconClass || '').trim().split(/\s+/).forEach(function (part) {
+        if (part.indexOf('fa-') === 0 && part !== 'fa-solid' && part !== 'fa-brands' && part !== 'fa-regular') {
+            name = part.slice(3);
+        }
+    });
+    var cls = 'icon' + (extraClass ? ' ' + extraClass : '');
+    return '<svg class="' + cls + '" aria-hidden="true"><use href="/assets/icons/sprite.svg#' + name + '"></use></svg>';
+}
+
+// ========================================
 // CATEGORY LABEL MAP
 // ========================================
 const categoryLabels = {
@@ -111,14 +129,18 @@ function dismissLoadingScreen() {
 async function loadPortfolioData() {
     let data;
     try {
-        const response = await fetch('portfolio-data.json');
-        if (!response.ok) {
+        // Reuse the fetch started in <head> (see index.html) instead of
+        // requesting portfolio-data.json a second time.
+        data = window.__earlyPortfolioData
+            ? await window.__earlyPortfolioData
+            : await fetch('portfolio-data.json').then(function (r) { return r.ok ? r.json() : null; });
+
+        if (!data) {
             console.log('JSON not found, using defaults');
             updatePageContent(defaultPortfolioData);
             dismissLoadingScreen();
             return;
         }
-        data = await response.json();
         Object.assign(portfolioData, data);
     } catch (error) {
         console.log('Error loading JSON, using defaults:', error);
@@ -321,7 +343,7 @@ function renderProjects(data) {
             <div class="break-inside-avoid mb-8 group project-card" data-category="${project.category}">
                 <div class="brutalist-card bg-brand-dark relative overflow-hidden">
                     <div class="aspect-[${project.aspect}] w-full overflow-hidden relative">
-                        <img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" loading="lazy">
+                        <img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" loading="lazy" decoding="async">
                         <div class="absolute inset-0 bg-brand-orange/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div class="absolute top-0 right-0 bg-brand-orange text-black font-bold px-4 py-2 text-xs uppercase z-10 clip-tag tracking-wider">${catLabel}</div>
                     </div>
@@ -368,7 +390,7 @@ function renderAbout(data) {
         highlights.innerHTML = data.about.highlights.map(h => `
             <div class="flex items-start gap-4">
                 <div class="w-12 h-12 border border-brand-gray flex items-center justify-center text-brand-orange shrink-0">
-                    <i class="${h.icon} text-xl"></i>
+                    ${iconHTML(h.icon, 'text-xl')}
                 </div>
                 <div>
                     <h4 class="text-xl font-bold uppercase mb-1">${h.title}</h4>
@@ -429,14 +451,14 @@ function renderServices(data) {
             <div class="p-8 md:p-12 ${borderClasses} border-brand-gray hover:bg-brand-dark transition-colors group">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="service-icon w-14 h-14 border border-brand-gray flex items-center justify-center text-brand-orange transition-colors">
-                        <i class="${service.icon} text-2xl"></i>
+                        ${iconHTML(service.icon, 'text-2xl')}
                     </div>
                     <h3 class="text-2xl font-bold uppercase">${service.title}</h3>
                 </div>
                 <p class="text-brand-light-gray text-sm mb-6 leading-relaxed">${service.description}</p>
                 <div class="flex items-center justify-between">
                     <span class="text-brand-orange font-bold text-lg">From ${service.price}</span>
-                    <a href="#contact" class="text-xs uppercase tracking-widest text-brand-light-gray hover:text-brand-orange transition-colors">Get a Quote <i class="fa-solid fa-arrow-right ml-1"></i></a>
+                    <a href="#contact" class="text-xs uppercase tracking-widest text-brand-light-gray hover:text-brand-orange transition-colors">Get a Quote <svg class="icon ml-1"><use href="/assets/icons/sprite.svg#arrow-right"></use></svg></a>
                 </div>
             </div>
         `;
@@ -485,10 +507,10 @@ function renderTestimonials(data) {
         return `
             <div class="relative group ${offsetClass}">
                 <div class="relative overflow-hidden mb-6 border-b-4 ${borderClass}">
-                    <img src="${hexToDataURL(t.image)}" alt="${t.name}" class="w-full aspect-[4/5] object-cover grayscale contrast-125" loading="lazy">
+                    <img src="${hexToDataURL(t.image)}" alt="${t.name}" class="w-full aspect-[4/5] object-cover grayscale contrast-125" loading="lazy" decoding="async">
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
                     <div class="absolute bottom-0 left-0 p-6 w-full">
-                        <i class="fa-solid fa-quote-left text-brand-orange text-3xl mb-4"></i>
+                        <svg class="icon text-brand-orange text-3xl mb-4"><use href="/assets/icons/sprite.svg#quote-left"></use></svg>
                         <p class="text-lg font-bold text-white mb-4 leading-tight">"${t.quote}"</p>
                         <div>
                             <h4 class="font-bold uppercase text-brand-orange">${t.name}</h4>
@@ -562,28 +584,12 @@ function renderFooter(data) {
     const tagline = document.querySelector('#footer .footer-tagline');
     if (tagline && data.footer) tagline.textContent = data.footer.tagline || '';
 
-    // Navigation links
-    const navList = document.querySelector('#footer .footer-nav-links');
-    if (navList && data.footer && data.footer.navigate) {
-        navList.innerHTML = data.footer.navigate.map(link =>
-            `<li><a href="${link.href}" class="hover:text-brand-orange transition-colors">${link.label}</a></li>`
-        ).join('');
-    }
-
-    // Service links
-    const serviceList = document.querySelector('#footer .footer-service-links');
-    if (serviceList && data.footer && data.footer.serviceLinks) {
-        serviceList.innerHTML = data.footer.serviceLinks.map(link =>
-            `<li><a href="${link.href}" class="hover:text-brand-orange transition-colors">${link.label}</a></li>`
-        ).join('');
-    }
-
     // Social links
     const socialContainer = document.querySelector('#footer .footer-social-links');
     if (socialContainer && data.personal.socialLinks) {
         socialContainer.innerHTML = data.personal.socialLinks.map(link =>
-            `<a href="${link.url}" class="w-10 h-10 bg-brand-dark border border-brand-gray flex items-center justify-center text-white hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all" aria-label="${link.name}" target="_blank" rel="noopener">
-                <i class="${link.icon}"></i>
+            `<a href="${link.url}" class="w-9 h-9 border border-brand-gray flex items-center justify-center text-brand-light-gray hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300" aria-label="${link.name}" target="_blank" rel="noopener">
+                ${iconHTML(link.icon, 'text-sm')}
             </a>`
         ).join('');
     }

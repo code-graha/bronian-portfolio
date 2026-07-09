@@ -53,6 +53,6 @@ User-agent: cohere-ai
 Allow: /
 
 # LLM-readable content
-llms.txt: https://bronian.work.gd/llms.txt
+llms.txt: https://bronian.webgraha.com/llms.txt
 
-Sitemap: https://bronian.work.gd/sitemap.xml
+Sitemap: https://bronian.webgraha.com/sitemap.xml

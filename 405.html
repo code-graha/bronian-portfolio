@@ -6,9 +6,10 @@
     <title>405 - Method Not Allowed | Bronian</title>
     <meta name="description" content="This HTTP method is not allowed. Head back to the Bronian portfolio.">
     <meta name="robots" content="noindex, nofollow">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/svg+xml" href="/assets/brand/favicon.svg">
+    <link rel="apple-touch-icon" href="/assets/brand/apple-touch-icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=space-grotesk@400,500,600,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/fonts/fonts.css">
     <script>
         tailwind.config = {
             theme: {
@@ -23,6 +24,10 @@
     <style>
         body { font-family: 'Space Grotesk', monospace; cursor: crosshair; }
         h1, h2, h3 { font-family: 'Clash Display', sans-serif; text-transform: uppercase; }
+
+        .icon { display: inline-block; width: 1em; height: 1em; fill: currentColor; vertical-align: -0.125em; }
+        .icon-spin { animation: icon-spin 1s linear infinite; }
+        @keyframes icon-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         @keyframes pulse-ring {
             0% { transform: scale(1); opacity: 1; }
@@ -73,8 +78,8 @@
             </a>
             <div class="hidden md:flex items-center gap-1">
                 <a href="/#work" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Work</a>
-                <a href="/#services" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Services</a>
                 <a href="/#about" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">About</a>
+                <a href="/#services" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Services</a>
                 <a href="/#contact" class="px-6 py-2 text-sm uppercase tracking-widest hover:bg-brand-orange hover:text-black transition-colors duration-200">Contact</a>
             </div>
             <a href="/#contact" class="hidden md:block border border-white px-6 py-2 text-sm uppercase font-bold hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300">
@@ -96,7 +101,7 @@
                         <div class="pulse-ring"></div>
                         <div class="pulse-ring" style="animation-delay: 0.5s;"></div>
                         <div class="w-24 h-24 sm:w-28 sm:h-28 mx-auto lg:mx-0 border-2 border-brand-orange flex items-center justify-center">
-                            <i class="fa-solid fa-shield-halved text-3xl sm:text-4xl text-brand-orange"></i>
+                            <svg class="icon text-3xl sm:text-4xl text-brand-orange"><use href="/assets/icons/sprite.svg#shield-halved"></use></svg>
                         </div>
                     </div>
                 </div>
@@ -119,7 +124,7 @@
                     <div class="brutalist-card bg-[#111] p-4">
                         <div class="flex items-center gap-2 mb-3">
                             <div class="w-8 h-8 bg-red-500/20 flex items-center justify-center">
-                                <i class="fa-solid fa-xmark text-red-400 text-sm"></i>
+                                <svg class="icon text-red-400 text-sm"><use href="/assets/icons/sprite.svg#xmark"></use></svg>
                             </div>
                             <span class="font-bold text-sm uppercase tracking-wider">Blocked</span>
                         </div>
@@ -133,7 +138,7 @@
                     <div class="brutalist-card bg-[#111] p-4">
                         <div class="flex items-center gap-2 mb-3">
                             <div class="w-8 h-8 bg-green-500/20 flex items-center justify-center">
-                                <i class="fa-solid fa-check text-green-400 text-sm"></i>
+                                <svg class="icon text-green-400 text-sm"><use href="/assets/icons/sprite.svg#check"></use></svg>
                             </div>
                             <span class="font-bold text-sm uppercase tracking-wider">Allowed</span>
                         </div>
@@ -148,11 +153,11 @@
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-3">
                     <a href="/" class="flex-1 px-6 py-3 bg-brand-orange text-black font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-white hover:text-black flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-arrow-left"></i>
+                        <svg class="icon"><use href="/assets/icons/sprite.svg#arrow-left"></use></svg>
                         Go to Homepage
                     </a>
                     <a href="/#contact" class="flex-1 px-6 py-3 border border-gray-700 text-white font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:border-brand-orange hover:text-brand-orange flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-envelope"></i>
+                        <svg class="icon"><use href="/assets/icons/sprite.svg#envelope"></use></svg>
                         Contact Form
                     </a>
                 </div>
@@ -162,19 +167,19 @@
                     <p class="text-xs text-gray-600 mb-3 uppercase tracking-widest font-bold">Explore Instead</p>
                     <div class="grid grid-cols-4 gap-2">
                         <a href="/#work" class="p-3 border border-gray-800 hover:border-brand-orange transition-all text-center group">
-                            <i class="fa-solid fa-images text-brand-orange text-sm group-hover:scale-110 transition-transform block mb-1"></i>
+                            <svg class="icon text-brand-orange text-sm group-hover:scale-110 transition-transform block mb-1"><use href="/assets/icons/sprite.svg#images"></use></svg>
                             <span class="text-xs text-gray-500 group-hover:text-white uppercase">Work</span>
                         </a>
-                        <a href="/#services" class="p-3 border border-gray-800 hover:border-brand-orange transition-all text-center group">
-                            <i class="fa-solid fa-wand-magic-sparkles text-brand-orange text-sm group-hover:scale-110 transition-transform block mb-1"></i>
-                            <span class="text-xs text-gray-500 group-hover:text-white uppercase">Services</span>
-                        </a>
                         <a href="/#about" class="p-3 border border-gray-800 hover:border-brand-orange transition-all text-center group">
-                            <i class="fa-solid fa-user text-brand-orange text-sm group-hover:scale-110 transition-transform block mb-1"></i>
+                            <svg class="icon text-brand-orange text-sm group-hover:scale-110 transition-transform block mb-1"><use href="/assets/icons/sprite.svg#user"></use></svg>
                             <span class="text-xs text-gray-500 group-hover:text-white uppercase">About</span>
                         </a>
+                        <a href="/#services" class="p-3 border border-gray-800 hover:border-brand-orange transition-all text-center group">
+                            <svg class="icon text-brand-orange text-sm group-hover:scale-110 transition-transform block mb-1"><use href="/assets/icons/sprite.svg#wand-magic-sparkles"></use></svg>
+                            <span class="text-xs text-gray-500 group-hover:text-white uppercase">Services</span>
+                        </a>
                         <a href="/#contact" class="p-3 border border-gray-800 hover:border-brand-orange transition-all text-center group">
-                            <i class="fa-solid fa-envelope text-brand-orange text-sm group-hover:scale-110 transition-transform block mb-1"></i>
+                            <svg class="icon text-brand-orange text-sm group-hover:scale-110 transition-transform block mb-1"><use href="/assets/icons/sprite.svg#envelope"></use></svg>
                             <span class="text-xs text-gray-500 group-hover:text-white uppercase">Contact</span>
                         </a>
                     </div>
@@ -185,42 +190,37 @@
     </main>
 
     <!-- Footer -->
-    <footer class="relative z-10 bg-[#0a0a0a] border-t border-[#222] pt-12 pb-8">
+    <footer class="relative z-10 bg-[#0a0a0a] border-t border-[#222] pt-10 pb-8">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-start mb-12 gap-10">
-                <div class="max-w-xs">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-8 h-8 bg-brand-orange flex items-center justify-center border border-white">
-                            <span class="text-black font-bold text-lg">B</span>
-                        </div>
-                        <span style="font-family: 'Clash Display', sans-serif;" class="font-bold text-xl tracking-tighter uppercase text-white">Bronian<span class="text-brand-orange">.</span></span>
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 pb-6 border-b border-[#222]">
+                <a href="/" class="flex items-center gap-3 shrink-0">
+                    <div class="w-8 h-8 bg-brand-orange flex items-center justify-center border border-white">
+                        <span class="text-black font-bold text-lg">B</span>
                     </div>
-                    <p class="text-gray-500 text-sm">Freelance graphic designer crafting bold brand identities and digital experiences. Based in India, working globally.</p>
-                </div>
-                <div class="grid grid-cols-2 gap-12">
-                    <div>
-                        <h4 class="text-white font-bold uppercase mb-4 text-sm tracking-widest">Navigate</h4>
-                        <ul class="space-y-3 text-sm text-gray-500">
-                            <li><a href="/#work" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Work</a></li>
-                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Services</a></li>
-                            <li><a href="/#about" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">About</a></li>
-                            <li><a href="/#contact" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-white font-bold uppercase mb-4 text-sm tracking-widest">Services</h4>
-                        <ul class="space-y-3 text-sm text-gray-500">
-                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Brand Identity</a></li>
-                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Video Editing</a></li>
-                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Print Design</a></li>
-                            <li><a href="/#services" class="hover:text-brand-orange transition-colors uppercase tracking-widest text-xs">Illustration</a></li>
-                        </ul>
-                    </div>
+                    <span style="font-family: 'Clash Display', sans-serif;" class="font-bold text-xl tracking-tighter uppercase text-white">Bronian<span class="text-brand-orange">.</span></span>
+                </a>
+
+                <p class="text-gray-500 text-sm text-center">Freelance graphic designer crafting bold brand identities and digital experiences.</p>
+
+                <div class="flex items-center gap-3 text-base shrink-0">
+                    <a href="https://instagram.com/mohitdesign" class="w-9 h-9 border border-[#222] flex items-center justify-center text-gray-500 hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300" aria-label="Instagram" target="_blank" rel="noopener">
+                        <svg class="icon text-sm"><use href="/assets/icons/sprite.svg#instagram"></use></svg>
+                    </a>
+                    <a href="https://behance.net/mohitdesign" class="w-9 h-9 border border-[#222] flex items-center justify-center text-gray-500 hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300" aria-label="Behance" target="_blank" rel="noopener">
+                        <svg class="icon text-sm"><use href="/assets/icons/sprite.svg#behance"></use></svg>
+                    </a>
+                    <a href="https://dribbble.com/mohitdesign" class="w-9 h-9 border border-[#222] flex items-center justify-center text-gray-500 hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300" aria-label="Dribbble" target="_blank" rel="noopener">
+                        <svg class="icon text-sm"><use href="/assets/icons/sprite.svg#dribbble"></use></svg>
+                    </a>
+                    <a href="https://linkedin.com/in/mohitdesign" class="w-9 h-9 border border-[#222] flex items-center justify-center text-gray-500 hover:bg-brand-orange hover:text-black hover:border-brand-orange transition-all duration-300" aria-label="LinkedIn" target="_blank" rel="noopener">
+                        <svg class="icon text-sm"><use href="/assets/icons/sprite.svg#linkedin-in"></use></svg>
+                    </a>
                 </div>
             </div>
-            <div class="border-t border-[#222] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-xs text-gray-500 uppercase">&copy; <script>document.write(new Date().getFullYear())</script> Bronian. All rights reserved.</p>
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest">Crafted with intent by <a href="https://siddharthmhjn.com" target="_blank" class="text-brand-orange hover:underline transition-colors">siddharthmhjn.com</a></p>
+
+            <div class="pt-6 flex flex-col-reverse md:flex-row justify-between items-center gap-3 text-[10px] uppercase tracking-widest text-gray-500">
+                <p>&copy; <script>document.write(new Date().getFullYear())</script> Bronian. All rights reserved.</p>
+                <p>Crafted and Managed by <a href="https://webgraha.com" target="_blank" rel="noopener noreferrer" class="text-brand-orange hover:underline transition-colors">WebGraha</a></p>
             </div>
         </div>
     </footer>
