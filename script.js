@@ -104,6 +104,19 @@ function iconHTML(iconClass, extraClass) {
 }
 
 // ========================================
+// YOUTUBE HELPER
+// Projects only ever had an "Image URL" field, but it's common to want to
+// showcase a video instead — this detects a pasted YouTube link (watch,
+// youtu.be, embed, or shorts URL) and pulls out the video ID so the grid can
+// show its thumbnail and the modal can embed a real player.
+// ========================================
+function getYouTubeId(url) {
+    if (!url) return null;
+    var match = String(url).match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+    return match ? match[1] : null;
+}
+
+// ========================================
 // CATEGORY LABEL MAP
 // ========================================
 const categoryLabels = {
@@ -149,8 +162,14 @@ async function loadPortfolioData() {
         return;
     }
 
-    // Render static sections immediately (hero, about, services, etc.)
+    // Render static sections immediately (hero, about, services, etc.) and
+    // dismiss the full-screen loader right away — Projects/Reviews come from
+    // a separate Google Sheets round-trip that can take several seconds
+    // (Apps Script cold starts), and there's no reason to block the whole
+    // homescreen on that when those two sections already have their own
+    // per-section loaders (#workLoader / #testimonialsLoader) below.
     updatePageContent(data);
+    dismissLoadingScreen();
 
     // Use early-fetched promises (started in <head>) or fall back to fresh fetch
     const sheetURL = data.sheetURL;
@@ -165,9 +184,6 @@ async function loadPortfolioData() {
             .catch(function () { return null; });
 
         const [projData, reviewsData] = await Promise.all([projectsFetch, reviewsFetch]);
-
-        // Dismiss loading screen
-        dismissLoadingScreen();
 
         // Update projects
         if (projData && projData.status === 'success' && Array.isArray(projData.projects) && projData.projects.length > 0) {
@@ -199,7 +215,8 @@ async function loadPortfolioData() {
             hideLoader('testimonialsLoader');
         }
     } else {
-        dismissLoadingScreen();
+        hideLoader('workLoader');
+        hideLoader('testimonialsLoader');
     }
 }
 
@@ -339,11 +356,21 @@ function renderProjects(data) {
 
     grid.innerHTML = data.projects.map(project => {
         const catLabel = categoryLabels[project.category] || (project.category ? project.category.charAt(0).toUpperCase() + project.category.slice(1) : project.category);
+        const videoId = getYouTubeId(project.image);
+        const thumbnail = videoId
+            ? `<img src="https://img.youtube.com/vi/${videoId}/hqdefault.jpg" alt="${project.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" loading="lazy" decoding="async">
+               <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                   <div class="w-14 h-14 rounded-full bg-brand-black/70 border border-white flex items-center justify-center group-hover:bg-brand-orange group-hover:border-brand-orange transition-colors">
+                       ${iconHTML('fa-solid fa-play', 'text-white group-hover:text-black text-lg ml-1')}
+                   </div>
+               </div>`
+            : `<img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" loading="lazy" decoding="async">`;
+
         return `
-            <div class="break-inside-avoid mb-8 group project-card" data-category="${project.category}">
+            <div class="break-inside-avoid mb-8 group project-card cursor-pointer" data-category="${project.category}" data-id="${project.id}">
                 <div class="brutalist-card bg-brand-dark relative overflow-hidden">
                     <div class="aspect-[${project.aspect}] w-full overflow-hidden relative">
-                        <img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0" loading="lazy" decoding="async">
+                        ${thumbnail}
                         <div class="absolute inset-0 bg-brand-orange/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         <div class="absolute top-0 right-0 bg-brand-orange text-black font-bold px-4 py-2 text-xs uppercase z-10 clip-tag tracking-wider">${catLabel}</div>
                     </div>
@@ -638,6 +665,77 @@ function initFilterLogic() {
 }
 
 // ========================================
+// PROJECT MODAL
+// ========================================
+function openProjectModal(project) {
+    var modal = document.getElementById('projectModal');
+    if (!modal) return;
+
+    var catLabel = categoryLabels[project.category] || (project.category ? project.category.charAt(0).toUpperCase() + project.category.slice(1) : project.category);
+    var videoId = getYouTubeId(project.image);
+    var imageEl = document.getElementById('projectModalImage');
+    var videoWrap = document.getElementById('projectModalVideoWrap');
+    var videoEl = document.getElementById('projectModalVideo');
+
+    if (videoId) {
+        imageEl.classList.add('hidden');
+        videoWrap.classList.remove('hidden');
+        videoEl.title = project.title || '';
+        videoEl.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+    } else {
+        videoWrap.classList.add('hidden');
+        imageEl.classList.remove('hidden');
+        imageEl.src = project.image || '';
+        imageEl.alt = project.title || '';
+    }
+
+    document.getElementById('projectModalCategory').textContent = catLabel || '';
+    document.getElementById('projectModalYear').textContent = project.year || '';
+    document.getElementById('projectModalTitle').textContent = project.title || '';
+    document.getElementById('projectModalDescription').textContent = project.description || '';
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+function closeProjectModal() {
+    var modal = document.getElementById('projectModal');
+    if (!modal) return;
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+
+    // Clear the iframe src so the video actually stops (rather than playing
+    // on muted/hidden in the background) once the modal is closed.
+    var videoEl = document.getElementById('projectModalVideo');
+    if (videoEl) videoEl.src = '';
+}
+
+function initProjectModal() {
+    var grid = document.querySelector('#work .masonry-grid');
+    var closeBtn = document.getElementById('projectModalClose');
+    var backdrop = document.getElementById('projectModalBackdrop');
+
+    if (grid) {
+        // Delegated so it keeps working after renderProjects() re-fills the
+        // grid's innerHTML (e.g. once Sheet data arrives).
+        grid.addEventListener('click', function (e) {
+            var card = e.target.closest('.project-card');
+            if (!card) return;
+            var id = card.getAttribute('data-id');
+            var project = (portfolioData.projects || []).find(function (p) { return String(p.id) === String(id); });
+            if (project) openProjectModal(project);
+        });
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeProjectModal);
+    if (backdrop) backdrop.addEventListener('click', closeProjectModal);
+    document.addEventListener('keydown', function (e) {
+        var modal = document.getElementById('projectModal');
+        if (e.key === 'Escape' && modal && modal.style.display === 'flex') closeProjectModal();
+    });
+}
+
+// ========================================
 // MOBILE MENU
 // ========================================
 function openMobileMenu() {
@@ -787,6 +885,7 @@ document.addEventListener('DOMContentLoaded', function () {
     loadPortfolioData();
     initContactForm();
     initNavbarScroll();
+    initProjectModal();
 
     // Mobile menu button
     var menuBtn = document.getElementById('menuBtn');

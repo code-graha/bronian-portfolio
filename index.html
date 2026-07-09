@@ -488,6 +488,30 @@
         </div>
     </footer>
 
+    <!-- ========== PROJECT MODAL ========== -->
+    <div id="projectModal" class="fixed inset-0 z-[200] items-center justify-center p-4 md:p-8" style="display:none;">
+        <div id="projectModalBackdrop" class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
+        <div class="relative bg-brand-dark border border-brand-gray max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <button id="projectModalClose" class="absolute top-4 right-4 z-10 w-10 h-10 bg-brand-black border border-brand-gray flex items-center justify-center text-white hover:border-brand-orange hover:text-brand-orange transition-colors" aria-label="Close">
+                <svg class="icon"><use href="/assets/icons/sprite.svg#xmark"></use></svg>
+            </button>
+            <div class="w-full overflow-hidden bg-brand-black">
+                <img id="projectModalImage" src="" alt="" class="w-full h-auto max-h-[55vh] object-contain">
+                <div id="projectModalVideoWrap" class="hidden relative w-full" style="aspect-ratio: 16/9;">
+                    <iframe id="projectModalVideo" src="" title="" class="absolute inset-0 w-full h-full" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div class="p-6 md:p-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <span id="projectModalCategory" class="bg-brand-orange text-black font-bold px-3 py-1 text-xs uppercase tracking-wider clip-tag"></span>
+                    <span id="projectModalYear" class="text-xs text-brand-light-gray border border-brand-gray px-2 py-1 uppercase"></span>
+                </div>
+                <h3 id="projectModalTitle" class="text-3xl md:text-4xl font-bold font-display uppercase mb-4 text-white"></h3>
+                <p id="projectModalDescription" class="text-brand-light-gray leading-relaxed"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- Static SEO content for crawlers that don't execute JavaScript -->
     <noscript>
     <article style="padding:2rem;max-width:800px;margin:auto;color:#e5e7eb;">

@@ -240,8 +240,9 @@
 
                             <!-- Image URL -->
                             <div>
-                                <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Image URL *</label>
-                                <input type="url" name="image" required placeholder="https://images.unsplash.com/..." class="w-full px-4 py-3 text-sm" id="imageInput">
+                                <label class="block text-xs tracking-widest text-brand-light-gray mb-2">Image or YouTube URL *</label>
+                                <input type="url" name="image" required placeholder="https://images.unsplash.com/... or https://youtube.com/watch?v=..." class="w-full px-4 py-3 text-sm" id="imageInput">
+                                <p class="text-[10px] text-brand-light-gray mt-1">A direct image link shows as a photo. A YouTube link shows its thumbnail with a play button, and opens as a playable video in the popup.</p>
                                 <div id="imagePreview" class="mt-3 hidden">
                                     <img src="" alt="Preview" class="img-preview w-full rounded">
                                 </div>
@@ -882,11 +883,22 @@
         }
 
         // IMAGE PREVIEW
+        function getYouTubeId(url) {
+            if (!url) return null;
+            var match = String(url).match(/(?:youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            return match ? match[1] : null;
+        }
+
         document.getElementById('imageInput').addEventListener('input', function () {
             var url = this.value.trim();
             var previewContainer = document.getElementById('imagePreview');
             var img = previewContainer.querySelector('img');
-            if (url) {
+            var videoId = getYouTubeId(url);
+            if (videoId) {
+                img.src = 'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
+                img.onload = function () { previewContainer.classList.remove('hidden'); };
+                img.onerror = function () { previewContainer.classList.add('hidden'); };
+            } else if (url) {
                 img.src = url;
                 img.onload = function () { previewContainer.classList.remove('hidden'); };
                 img.onerror = function () { previewContainer.classList.add('hidden'); };

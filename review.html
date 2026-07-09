@@ -71,8 +71,8 @@
         }
 
         .star-btn { transition: all 0.15s ease; }
-        .star-btn:hover i, .star-btn.active i { color: #FF4500; transform: scale(1.2); }
-        .star-btn i { transition: all 0.15s ease; }
+        .star-btn:hover svg, .star-btn.active svg { color: #FF4500; transform: scale(1.2); }
+        .star-btn svg { transition: all 0.15s ease; }
 
         .img-preview {
             max-height: 120px;
@@ -275,12 +275,12 @@
                     var r = parseInt(b.getAttribute('data-rating'));
                     if (r <= selectedRating) {
                         b.classList.add('active');
-                        b.querySelector('i').classList.remove('text-brand-gray');
-                        b.querySelector('i').classList.add('text-brand-orange');
+                        b.querySelector('svg').classList.remove('text-brand-gray');
+                        b.querySelector('svg').classList.add('text-brand-orange');
                     } else {
                         b.classList.remove('active');
-                        b.querySelector('i').classList.add('text-brand-gray');
-                        b.querySelector('i').classList.remove('text-brand-orange');
+                        b.querySelector('svg').classList.add('text-brand-gray');
+                        b.querySelector('svg').classList.remove('text-brand-orange');
                     }
                 });
             });
@@ -310,7 +310,7 @@
                 return;
             }
 
-            resizeImage(file, 200, function (hex, previewDataURL) {
+            resizeImage(file, function (hex, previewDataURL) {
                 imageHex = hex;
                 imagePreviewSrc = previewDataURL;
                 var previewContainer = document.getElementById('imagePreview');
@@ -335,47 +335,64 @@
             document.querySelector('#uploadLabel span').textContent = 'Click to upload photo';
         });
 
-        // Resize image to max dimension and return hex string
-        function resizeImage(file, maxSize, callback) {
+        // Resize image and return a hex string, sized as large/sharp as
+        // possible while keeping it well under Google Sheets' ~50,000
+        // character-per-cell limit (a hex string is 2 chars per byte, so the
+        // encoded file itself needs to stay under ~24KB). Starts at a much
+        // sharper size than a fixed tiny thumbnail would allow, then steps
+        // quality/dimensions down only if a particular photo needs it.
+        function resizeImage(file, callback) {
+            var MAX_HEX_LENGTH = 46000; // safety margin under the 50,000 cap
             var reader = new FileReader();
             reader.onload = function (e) {
                 var img = new Image();
                 img.onload = function () {
                     var canvas = document.createElement('canvas');
-                    var w = img.width;
-                    var h = img.height;
+                    var ctx = canvas.getContext('2d');
 
-                    // Scale down if larger than maxSize
-                    if (w > maxSize || h > maxSize) {
-                        if (w > h) {
-                            h = Math.round(h * maxSize / w);
-                            w = maxSize;
-                        } else {
-                            w = Math.round(w * maxSize / h);
-                            h = maxSize;
+                    function render(maxSize) {
+                        var w = img.width;
+                        var h = img.height;
+                        if (w > maxSize || h > maxSize) {
+                            if (w > h) {
+                                h = Math.round(h * maxSize / w);
+                                w = maxSize;
+                            } else {
+                                w = Math.round(w * maxSize / h);
+                                h = maxSize;
+                            }
                         }
+                        canvas.width = w;
+                        canvas.height = h;
+                        ctx.clearRect(0, 0, w, h);
+                        ctx.drawImage(img, 0, 0, w, h);
                     }
 
-                    canvas.width = w;
-                    canvas.height = h;
-                    var ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, w, h);
+                    function attempt(maxSize, quality) {
+                        render(maxSize);
+                        canvas.toBlob(function (blob) {
+                            var blobReader = new FileReader();
+                            blobReader.onload = function () {
+                                var bytes = new Uint8Array(blobReader.result);
+                                var hex = '';
+                                for (var i = 0; i < bytes.length; i++) {
+                                    hex += bytes[i].toString(16).padStart(2, '0');
+                                }
 
-                    // Convert canvas to blob, then to hex
-                    canvas.toBlob(function (blob) {
-                        var blobReader = new FileReader();
-                        blobReader.onload = function () {
-                            var bytes = new Uint8Array(blobReader.result);
-                            var hex = '';
-                            for (var i = 0; i < bytes.length; i++) {
-                                hex += bytes[i].toString(16).padStart(2, '0');
-                            }
-                            // Also generate preview data URL
-                            var previewDataURL = canvas.toDataURL('image/jpeg', 0.8);
-                            callback(hex, previewDataURL);
-                        };
-                        blobReader.readAsArrayBuffer(blob);
-                    }, 'image/jpeg', 0.8);
+                                if (hex.length > MAX_HEX_LENGTH && quality > 0.5) {
+                                    attempt(maxSize, quality - 0.15);
+                                } else if (hex.length > MAX_HEX_LENGTH && maxSize > 250) {
+                                    attempt(maxSize - 100, 0.85);
+                                } else {
+                                    var previewDataURL = canvas.toDataURL('image/jpeg', 0.85);
+                                    callback(hex, previewDataURL);
+                                }
+                            };
+                            blobReader.readAsArrayBuffer(blob);
+                        }, 'image/jpeg', quality);
+                    }
+
+                    attempt(600, 0.85);
                 };
                 img.src = e.target.result;
             };
